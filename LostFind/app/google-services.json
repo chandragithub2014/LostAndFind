@@ -1,0 +1,51 @@
+{
+  "project_info": {
+    "project_id": "lostandfind-1235",
+    "project_number": "99193507046",
+    "name": "LostAndFind"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99193507046:android:26548841de4690eb",
+        "client_id": "android:com.lostfind",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.lostfind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99193507046-emt20imbijm3d3q2a8pntpcnf0ijtuoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lostfind",
+            "certificate_hash": "B03ECB6C8A478E0FD2344298D715EF53361730BF"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
