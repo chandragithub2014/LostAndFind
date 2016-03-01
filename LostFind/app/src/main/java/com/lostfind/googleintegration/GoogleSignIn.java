@@ -2,6 +2,7 @@ package com.lostfind.googleintegration;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -30,25 +32,40 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
     private static final String TAG = "GoogleSignIn";
     private ProgressDialog mProgressDialog;
     SocialIntgration socialIntgration;
+    private ConnectionResult connection_result;
     Context ctx;
+    GoogleApiAvailability google_api_availability;
+    private boolean is_intent_inprogress;
+    private boolean is_signInBtn_clicked;
+    private int request_code;
 
-      public  GoogleSignIn(AppCompatActivity activity,SocialIntgration socialIntgration){
+    private static GoogleSignIn instance;
+    private static final int SIGN_IN_CODE = 0;
+
+    private GoogleSignIn(){
+
+    }
+
+    public static GoogleSignIn getInstance(){
+        if(instance == null){
+            instance = new GoogleSignIn();
+        }
+        return instance;
+    }
+
+    public void startGoogleSignIn(AppCompatActivity activity,SocialIntgration socialIntgration){
           this.activity = activity;
           this.socialIntgration = socialIntgration;
-
-          configureSignIn();
-          buildClient();
-          socialIntgration.googleInitDone(true);
+        mProgressDialog = new ProgressDialog(activity);
+          /*configureSignIn();
+          buildClient();*/
+           buidNewGoogleApiClient();
+          //socialIntgration.googleInitDone(true);
+           socialIntgration.receiveGoogleApiClient(mGoogleApiClient);
       }
 
-    public  GoogleSignIn(AppCompatActivity activity){
-        this.activity = activity;
-     //   this.socialIntgration = socialIntgration;
-        buidNewGoogleApiClient();
-       /* configureSignIn();
-        buildClient();*/
-        socialIntgration.googleInitDone(true);
-    }
+
+
 
     private void buidNewGoogleApiClient(){
 
@@ -58,6 +75,7 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
                 .addApi(Plus.API,Plus.PlusOptions.builder().build())
                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
+        onStart();
     }
 
     public  void onStart() {
@@ -65,6 +83,28 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
         mGoogleApiClient.connect();
     }
 
+    public void resolveSignInError() {
+        if (connection_result.hasResolution()) {
+            try {
+                is_intent_inprogress = true;
+                connection_result.startResolutionForResult(activity, SIGN_IN_CODE);
+                Log.d("resolve error", "sign in error resolved");
+            } catch (IntentSender.SendIntentException e) {
+                is_intent_inprogress = false;
+                mGoogleApiClient.connect();
+            }
+        }
+    }
+
+    private void gPlusSignIn() {
+        if (!mGoogleApiClient.isConnecting()) {
+            Log.d("user connected","connected");
+            is_signInBtn_clicked = true;
+            mProgressDialog.show();
+            resolveSignInError();
+
+        }
+    }
     protected void onStop() {
 
         if (mGoogleApiClient.isConnected()) {
@@ -103,13 +143,27 @@ public class GoogleSignIn implements GoogleApiClient.OnConnectionFailedListener 
 
     }
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult result) {
               Log.d(TAG,"ConnectionFailed.....");
+        if (!result.hasResolution()) {
+            google_api_availability.getErrorDialog(activity, result.getErrorCode(),request_code).show();
+            return;
+        }
+
+        if (!is_intent_inprogress) {
+
+            connection_result = result;
+
+            if (is_signInBtn_clicked) {
+
+                resolveSignInError();
+            }
+        }
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-
+      socialIntgration.receiveGoogleApiClient(mGoogleApiClient);
     }
 
     @Override

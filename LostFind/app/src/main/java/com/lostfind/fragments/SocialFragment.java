@@ -201,7 +201,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.gplus:
-             //   googlePlusLogin();
+               googlePlusLogin();
                 break;
             case R.id.fbook:
                  fbLogin();
@@ -267,18 +267,22 @@ private void googlePlusLogin(){
         mSignInButtonClicked = true;
     }*/
 
-    Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-    startActivityForResult(signInIntent, RC_SIGN_IN);
+   /* Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+    startActivityForResult(signInIntent, RC_SIGN_IN);*/
+/*    Intent googleSignInIntent = new Intent(getActivity(),GoogleSignInFragment.class);
+    startActivity(googleSignInIntent);*/
+
+    getFragmentManager().beginTransaction().replace(mContainerId, new GoogleSignInFragment()).addToBackStack(null).commit();
 
 }
 
     private void fbLogin(){
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
     }
-    private void initGPlus(){
+  /*  private void initGPlus(){
 
         new GoogleSignIn(MyApplication.getInstance().getActivity(),SocialFragment.this);
-    }
+    }*/
   private void initFB(){
     FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
       callbackManager = CallbackManager.Factory.create();
@@ -441,5 +445,10 @@ if(accessTokenTracker!=null && profileTracker!=null){
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
             startActivityForResult(signInIntent, RC_SIGN_IN);
         }*/
+    }
+
+    @Override
+    public void receiveGoogleApiClient(GoogleApiClient mGoogleApiClient) {
+        this.mGoogleApiClient = mGoogleApiClient;
     }
 }
