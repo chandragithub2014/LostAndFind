@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:layout_margin="10dp"
+    android:weightSum="60"
+    android:background="#70ffffff"
+    android:id="@+id/loginview"
+    >
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="10"
+    android:text="Sign In"
+    android:id="@+id/label"
+    android:textSize="30dp"
+    android:textColor="@android:color/holo_blue_dark"
+    android:background="#8f3ebe"
+    android:gravity="center_horizontal"
+   ></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:layout_below="@+id/label"
+        android:id="@+id/login_layout"
+        android:gravity="center"
+        android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="User Name"
+        android:textColor="#000000"
+        android:layout_marginLeft="10dp"
+        />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="User Name"
+            android:id="@+id/login_email"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittextstyle"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textColor="#000000"
+            android:layout_marginLeft="10dp"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:id="@+id/login_pwd"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edittextstyle"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@android:color/white"
+            android:background="#481fbe"
+            android:id="@+id/login"
+            android:text="LOGIN"/>
+
+
+
+    </LinearLayout>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+       android:layout_below="@+id/login_layout"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#8f3ebe">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login With"
+            android:layout_gravity="center_vertical"
+            android:textColor="#ffffff"
+            android:paddingLeft="50dp"
+            android:paddingRight="5dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fb"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/fb"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/gp"
+            android:src="@drawable/gplus"/>
+
+
+    </LinearLayout>-->
+
+
+
+
+
+</LinearLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.lostfind.application.MyApplication;
 import com.lostfind.fragments.SocialFragment;
+import com.lostfind.fragments.SplashScreenFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.loginparentLayout,  SocialFragment.newInstance("", ""))
+                .replace(R.id.loginparentLayout,  SplashScreenFragment.newInstance("", ""))
                 .commit();
     }
 }

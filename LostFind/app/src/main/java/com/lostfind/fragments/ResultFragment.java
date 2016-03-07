@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.lostfind.MainActivity;
 import com.lostfind.R;
+import com.lostfind.SharedPreferencesUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +37,7 @@ public class ResultFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     View view = null;
+    SharedPreferencesUtils sharedUtils;
 
 
     public ResultFragment() {
@@ -66,6 +69,7 @@ public class ResultFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        sharedUtils = new SharedPreferencesUtils();
     }
 
     @Override
@@ -74,6 +78,7 @@ public class ResultFragment extends Fragment {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_result, container, false);
         Toolbar mtoolBar = (Toolbar)((AppCompatActivity) getActivity()).findViewById(R.id.toolbar);
+        mtoolBar.setVisibility(View.VISIBLE);
         TextView titleBar = (TextView)mtoolBar.findViewById(R.id.title);
         titleBar.setText("Offer Ride");
         ImageView logout  = (ImageView)mtoolBar.findViewById(R.id.logout_icon);
@@ -81,13 +86,26 @@ public class ResultFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performLogout();
+                String loginType = fetchLoginType();
+                if(!TextUtils.isEmpty(loginType)){
+                   if(loginType.equalsIgnoreCase("facebookprofile")){
+                       performLogout();
+                   }else if(loginType.equalsIgnoreCase("googleprofile")){
+                       GoogleSignOut.getInstance().signOut();
+                   }
+                }
+
             }
         });
         return view;
     }
 
 
+    private String fetchLoginType(){
+        String loginType = "";
+        loginType =  sharedUtils.getStringPreferences(getActivity(),"loginType");
+        return loginType;
+    }
     private void performLogout(){
         disconnectFromFacebook();
         Intent i = new Intent(getActivity(), MainActivity.class); // Your list's Intent

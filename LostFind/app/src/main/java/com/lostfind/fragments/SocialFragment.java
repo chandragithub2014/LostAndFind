@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -87,7 +88,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
     private boolean mSignInButtonClicked = false;
 
     private EditText loginEmail,loginPassword;
-
+    private String faceBookEmail = "";
 
     public SocialFragment() {
         // Required empty public constructor
@@ -130,17 +131,21 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_social, container, false);
+        View view =  inflater.inflate(R.layout.siikloginlayout, container, false);
         mContainerId = container.getId();
-        ImageButton gPlus = (ImageButton)view.findViewById(R.id.gplus);
+        Toolbar mtoolBar = (Toolbar)((AppCompatActivity) getActivity()).findViewById(R.id.toolbar);
+        mtoolBar.setVisibility(View.GONE);
+       /* ImageButton gPlus = (ImageButton)view.findViewById(R.id.gplus);
         gPlus.setOnClickListener(this);
         ImageButton fBook = (ImageButton)view.findViewById(R.id.fbook);
         fBook.setOnClickListener(this);
-        initializeLayout(view);
+        initializeLayout(view);*/
+        initLoginLayout(view);
+        initSocialLogin(view);
         return view;
     }
 
-        private  void  initializeLayout(View v){
+       /* private  void  initializeLayout(View v){
             LinearLayout loginLayout = (LinearLayout)v.findViewById(R.id.login_pooler);
             sign_up = (TextView)loginLayout.findViewById(R.id.register_login);
             sign_up.setOnClickListener(this);
@@ -149,7 +154,30 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
             loginEmail = (EditText)loginLayout.findViewById(R.id.login_email);
             loginPassword = (EditText)loginLayout.findViewById(R.id.login_pwd);
 
-        }
+        }*/
+
+    private void initLoginLayout(View v){
+        LinearLayout loginLayout  = (LinearLayout)v.findViewById(R.id.loginview);
+        Button login = (Button)loginLayout.findViewById(R.id.login);
+        login.setOnClickListener(this);
+        loginEmail = (EditText)loginLayout.findViewById(R.id.login_email);
+        loginPassword = (EditText)loginLayout.findViewById(R.id.login_pwd);
+
+
+    }
+
+    private void initSocialLogin(View v){
+        LinearLayout loginLayout  = (LinearLayout)v.findViewById(R.id.registerview);
+      //  LinearLayout loginLayout_child  = (LinearLayout)loginLayout.findViewById(R.id.social_login_child);
+
+        //social_login
+        ImageButton gPlus = (ImageButton)loginLayout.findViewById(R.id.gplus);
+        gPlus.setOnClickListener(this);
+        ImageButton fBook = (ImageButton)loginLayout.findViewById(R.id.fbook);
+        fBook.setOnClickListener(this);
+        sign_up = (TextView)loginLayout.findViewById(R.id.register_login);
+        sign_up.setOnClickListener(this);
+    }
 /*
     private void initializeGoogleSignIn(){
       Log.d(TAG, "In initializeGoogleSignIn()");
@@ -295,6 +323,40 @@ private void googlePlusLogin(){
                       Log.d("Success", "Login");
 
                       Profile profile = Profile.getCurrentProfile();
+
+                      // Facebook Email address
+                      GraphRequest request = GraphRequest.newMeRequest(
+                              loginResult.getAccessToken(),
+                              new GraphRequest.GraphJSONObjectCallback() {
+                                  @Override
+                                  public void onCompleted(
+                                          JSONObject object,
+                                          GraphResponse response) {
+                                      Log.v("LoginActivity Response ", response.toString());
+
+                                      try {
+                                      String    Name = object.getString("name");
+
+                                    if(object.has("email")) {
+                                        faceBookEmail  = object.getString("email");
+                                    }
+                                          Log.v("Email = ", " " + faceBookEmail);
+                                          Log.d("TAG", "Name:::"+Name);
+                                       //   Toast.makeText(getActivity(), "Name " + Name, Toast.LENGTH_LONG).show();
+
+
+                                      } catch (JSONException e) {
+                                          e.printStackTrace();
+                                      }
+                                  }
+                              });
+                      Bundle parameters = new Bundle();
+                      parameters.putString("fields", "id,name,email,gender, birthday");
+                      request.setParameters(parameters);
+                      request.executeAsync();
+
+
+
                       if (profile != null) {
                           displayMessage(profile);
                       } else {
@@ -360,9 +422,11 @@ if(accessTokenTracker!=null && profileTracker!=null){
             Toast.makeText(getActivity(), "Facebook Profile Name:::" + profile.getName(), Toast.LENGTH_LONG).show();
             sharedUtils.saveStringPreferences(getActivity(), BikeConstants.BIKE_PREFS_DATA, profile.getName());
 
+
             JSONObject fbookJson = new JSONObject();
             try {
                 fbookJson.put("profilename", profile.getName());
+                fbookJson.put("profileemail",faceBookEmail);
 
 
             }

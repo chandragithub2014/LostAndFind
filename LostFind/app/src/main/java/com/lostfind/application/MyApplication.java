@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
@@ -21,6 +23,7 @@ public class MyApplication extends Application {
     private static MyApplication singleton;
     JSONObject publishJSON;
     AppCompatActivity activity;
+    GoogleApiClient mGoogleAPIClient;
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
   /*  private static final String TWITTER_KEY = "LEZjsy3ZQwyscBjvLdaz7bNgv";
     private static final String TWITTER_SECRET = "CTsRGP431ghMRSeeDadFxn5usbh4exlmD7qQMINch258Cb3JX9";*/
@@ -67,6 +70,14 @@ public class MyApplication extends Application {
 
     public void setActivity(AppCompatActivity activity) {
         this.activity = activity;
+    }
+
+    public GoogleApiClient getmGoogleAPIClient() {
+        return mGoogleAPIClient;
+    }
+
+    public void setmGoogleAPIClient(GoogleApiClient mGoogleAPIClient) {
+        this.mGoogleAPIClient = mGoogleAPIClient;
     }
 }
 

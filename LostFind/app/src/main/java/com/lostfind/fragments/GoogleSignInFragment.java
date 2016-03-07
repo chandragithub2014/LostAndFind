@@ -29,7 +29,11 @@ import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 import com.lostfind.R;
 import com.google.android.gms.common.api.Status;
+import com.lostfind.SharedPreferencesUtils;
 import com.lostfind.application.MyApplication;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ implements
         GoogleApiClient.OnConnectionFailedListener {
@@ -41,7 +45,7 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
 
-
+    int mContainerId = -1;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +89,15 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
         signInButton.setSize(SignInButton.SIZE_STANDARD);
         signInButton.setScopes(gso.getScopeArray());*/
         // [END customize_button]
+    }
+
+   //* @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mContainerId = container.getId();
+        TextView textView = new TextView(getActivity());
+        textView.setText("");
+        return textView;
     }
 
  /*   @Override
@@ -133,8 +146,28 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.d(TAG,"DisplayName::::"+acct.getDisplayName());
-       //     mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            Log.d(TAG,"Email:::"+acct.getEmail());
+
+
+            JSONObject gmailJson = new JSONObject();
+            try {
+                gmailJson.put("profilename", acct.getDisplayName());
+                gmailJson.put("profileemail",acct.getEmail());
+
+
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+            SharedPreferencesUtils sharedUtils = new SharedPreferencesUtils();
+            sharedUtils.saveStringPreferences(getActivity(), "facebook", gmailJson.toString());
+
+            sharedUtils.saveStringPreferences(getActivity(), "loginType", "googleprofile");
+          ////     mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
+          MyApplication.getInstance().setmGoogleAPIClient(mGoogleApiClient);
+            getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+
         } else {
             // Signed out, show unauthenticated UI.
             updateUI(false);

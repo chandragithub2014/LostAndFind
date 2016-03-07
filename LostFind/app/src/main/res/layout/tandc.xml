@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_margin="10dp">
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:id="@+id/tc"
+    android:textColor="#000000"
+    android:text="Terms&amp;conditions"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tc"
+        android:src="@drawable/fb_big"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"/>
+
+</RelativeLayout>
