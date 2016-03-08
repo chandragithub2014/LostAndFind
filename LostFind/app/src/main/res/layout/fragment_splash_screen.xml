@@ -2,9 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="#000000"
     tools:context="com.lostfind.fragments.SplashScreenFragment">
 
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+  <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:scaleType="centerInside"
+      android:layout_centerInParent="true"
+      android:src="@drawable/ic_splash"/>
 
+
+</RelativeLayout>
 
 </FrameLayout>

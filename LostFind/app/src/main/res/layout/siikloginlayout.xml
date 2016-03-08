@@ -9,13 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     android:weightSum="100"
-    android:background="@drawable/bg"
+    android:background="@drawable/ic_plane_bg"
     tools:context="cardfrag.andr.lostfindui.MainActivity">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="15"
+        android:layout_weight="12"
+        android:src="@drawable/ic_header_start"
 
         />
 
@@ -23,11 +24,11 @@
         layout="@layout/loginlayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="52"></include>
+        android:layout_weight="54"></include>
 
     <include android:id="@+id/registerview"
         layout="@layout/registrationsection"
-        android:layout_marginTop="5dp"
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="20"></include>

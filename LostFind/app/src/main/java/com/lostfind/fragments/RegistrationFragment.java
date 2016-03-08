@@ -2,6 +2,7 @@ package com.lostfind.fragments;
 
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.EmailValidator;
 import com.lostfind.utils.PasswordValidator;
 
@@ -37,7 +39,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     private String mParam2;
     int mContainerId = -1;
     LinearLayout loginLayout;
-    EditText userName,passWord,retypePassword,mobileNum;
+    EditText userName,passWord,retypePassword,mobileNum,name;
     Button signUp;
 
     private EmailValidator emailValidator;
@@ -83,19 +85,20 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mContainerId = container.getId();
-        View view =  inflater.inflate(R.layout.signup_layout, container, false);
+        View view =  inflater.inflate(R.layout.siikregistrationlayout, container, false);
         initViews(view);
         return  view;
     }
 
 
     private void initViews(View view){
-        loginLayout = (LinearLayout)view.findViewById(R.id.signup_pooler);
-        userName  = (EditText)loginLayout.findViewById(R.id.register_email);
-        passWord = (EditText)loginLayout.findViewById(R.id.register_pwd);
-        retypePassword = (EditText)loginLayout.findViewById(R.id.retype_pwd);
-        mobileNum = (EditText)loginLayout.findViewById(R.id.user_mobile);
-        signUp = (Button)loginLayout.findViewById(R.id.signup);
+       // loginLayout = (LinearLayout)view.findViewById(R.id.signup_pooler);
+        name  = (EditText)view.findViewById(R.id.reg_name);
+        userName  = (EditText)view.findViewById(R.id.register_email);
+        passWord = (EditText)view.findViewById(R.id.register_pwd);
+        retypePassword = (EditText)view.findViewById(R.id.retype_pwd);
+        mobileNum = (EditText)view.findViewById(R.id.user_mobile);
+        signUp = (Button)view.findViewById(R.id.signup);
         signUp.setOnClickListener(this);
     }
 
@@ -104,50 +107,55 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
     public void onClick(View v) {
       switch (v.getId()){
           case R.id.signup:
-              if(!TextUtils.isEmpty(userName.getText().toString())){
-             boolean isEmailValid = validateEmail(userName.getText().toString());
+              if(!TextUtils.isEmpty(name.getText().toString())) {
+                  if (!TextUtils.isEmpty(userName.getText().toString())) {
+                      boolean isEmailValid = validateEmail(userName.getText().toString());
 
-                  if(isEmailValid){
+                      if (isEmailValid) {
 
-                      if(!TextUtils.isEmpty(passWord.getText().toString())){
-                            //Validate Password
-                          String passWordToValidate =  passWord.getText().toString();
-                          if(passWordToValidate.length()<6 || passWordToValidate.length()>20){
-                            Toast.makeText(getActivity(),"Password must be  between 6 to 20 characters",Toast.LENGTH_LONG).show();
-                          }else {
-                              boolean isPassValid = validatePassword(passWord.getText().toString());
-                              if(isPassValid){
-                                      if(!TextUtils.isEmpty(retypePassword.getText().toString())){
+                          if (!TextUtils.isEmpty(passWord.getText().toString())) {
+                              //Validate Password
+                              String passWordToValidate = passWord.getText().toString();
+                              if (passWordToValidate.length() < 6 || passWordToValidate.length() > 20) {
+                                  Toast.makeText(getActivity(), "Password must be  between 6 to 20 characters", Toast.LENGTH_LONG).show();
+                              } else {
+                                  boolean isPassValid = validatePassword(passWord.getText().toString());
+                                  if (isPassValid) {
+                                      if (!TextUtils.isEmpty(retypePassword.getText().toString())) {
                                           String password = passWord.getText().toString();
                                           String reTypePassword = retypePassword.getText().toString();
-                                          if(password.equalsIgnoreCase(reTypePassword)){
-                                           //   saveInSharedPreferences(userName.getText().toString(),password);
-                                                 if(!TextUtils.isEmpty(mobileNum.getText().toString())){
-                                                     String phoneNum  = mobileNum.getText().toString();
-                                                     savePhoneNumberInPreferences("PhoneNumber",phoneNum);
-                                                     saveInSharedPreferences(userName.getText().toString(), password);
-                                                 }else{
-                                                     Toast.makeText(getActivity(),"Mobile Number Can't be Empty",Toast.LENGTH_LONG).show();
-                                                 }
-                                          }else{
-                                              Toast.makeText(getActivity(),"Password not matched",Toast.LENGTH_LONG).show();
+                                          if (password.equalsIgnoreCase(reTypePassword)) {
+                                              //   saveInSharedPreferences(userName.getText().toString(),password);
+                                              if (!TextUtils.isEmpty(mobileNum.getText().toString())) {
+                                                  String phoneNum = mobileNum.getText().toString();
+                                                  savePhoneNumberInPreferences("PhoneNumber", phoneNum);
+                                                  saveNameInPreferences("name",name.getText().toString());
+                                                  saveInSharedPreferences(userName.getText().toString(), password);
+                                              } else {
+                                                  Toast.makeText(getActivity(), "Mobile Number Can't be Empty", Toast.LENGTH_LONG).show();
+                                              }
+                                          } else {
+                                              Toast.makeText(getActivity(), "Password not matched", Toast.LENGTH_LONG).show();
                                           }
-                                      }else{
-                                          Toast.makeText(getActivity(),"Re Type Password cannot be empty",Toast.LENGTH_LONG).show();
+                                      } else {
+                                          Toast.makeText(getActivity(), "Re Type Password cannot be empty", Toast.LENGTH_LONG).show();
                                       }
-                              }else{
-                                  Toast.makeText(getActivity(),"Password must have atleast a lowercase,uppercase,digit and special symbol @#$% ",Toast.LENGTH_LONG).show();
-                              }
+                                  } else {
+                                      Toast.makeText(getActivity(), "Password must have atleast a lowercase,uppercase,digit and special symbol @#$% ", Toast.LENGTH_LONG).show();
+                                  }
 
+                              }
+                          } else {
+                              Toast.makeText(getActivity(), "Password cannot be empty", Toast.LENGTH_LONG).show();
                           }
-                      }else{
-                          Toast.makeText(getActivity(),"Password cannot be empty",Toast.LENGTH_LONG).show();
+                      } else {
+                          Toast.makeText(getActivity(), "Invalid Email", Toast.LENGTH_LONG).show();
                       }
-                  }else{
-                      Toast.makeText(getActivity(),"Invalid Email",Toast.LENGTH_LONG).show();
+                  } else {
+                      Toast.makeText(getActivity(), "Email cannot be empty", Toast.LENGTH_LONG).show();
                   }
               }else{
-                  Toast.makeText(getActivity(),"Email cannot be empty",Toast.LENGTH_LONG).show();
+                  Toast.makeText(getActivity(), "Name cannot be empty", Toast.LENGTH_LONG).show();
               }
 
 
@@ -202,13 +210,22 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         startActivity(i);
         getActivity().finish();
 */
-
+        callSlidingMenu();
 
     //    getFragmentManager().beginTransaction().replace(mContainerId, new BikePoolerMapFragment()).commit();
     }
 
+    private void callSlidingMenu(){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        startActivity(i);
+        getActivity().finish();
+    }
     private void savePhoneNumberInPreferences(String key,String phoneVal){
         prefs.saveStringPreferences(getActivity(), key, phoneVal);
+    }
+
+    private void saveNameInPreferences(String key,String name){
+        prefs.saveStringPreferences(getActivity(), key, name);
     }
 
 }

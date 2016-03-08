@@ -31,6 +31,7 @@ import com.lostfind.R;
 import com.google.android.gms.common.api.Status;
 import com.lostfind.SharedPreferencesUtils;
 import com.lostfind.application.MyApplication;
+import com.lostfind.slidingmenu.SlidingMenuActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -145,8 +146,8 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Log.d(TAG,"DisplayName::::"+acct.getDisplayName());
-            Log.d(TAG,"Email:::"+acct.getEmail());
+            Log.d(TAG, "DisplayName::::" + acct.getDisplayName());
+            Log.d(TAG, "Email:::" + acct.getEmail());
 
 
             JSONObject gmailJson = new JSONObject();
@@ -166,7 +167,9 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
           ////     mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
           MyApplication.getInstance().setmGoogleAPIClient(mGoogleApiClient);
-            getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+        //    getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("", "")).commit();
+             callSlidingMenu();
+
 
         } else {
             // Signed out, show unauthenticated UI.
@@ -175,6 +178,12 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
         hideProgressDialog();
     }
     // [END handleSignInResult]
+
+    private void callSlidingMenu(){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        startActivity(i);
+        getActivity().finish();
+    }
 
     // [START signIn]
     private void signIn() {

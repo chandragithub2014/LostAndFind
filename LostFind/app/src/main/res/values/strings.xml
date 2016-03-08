@@ -4,4 +4,28 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="nav_drawer_items">
+        <item>User Settings</item>
+        <item>Report Loss</item>
+        <item>Report Find</item>
+        <item>Search</item>
+        <item>Report History</item>
+        <item>Discussion</item>
+        <item>Community</item>
+    </string-array>
+
+
+    <array name="nav_drawer_image_items">
+        <item>@drawable/menu_usersettings</item>
+        <item>@drawable/menu_reportloss</item>
+        <item>@drawable/menu_reportfind</item>
+        <item>@drawable/menu_search</item>
+        <item>@drawable/menu_reporthistory</item>
+        <item>@drawable/menu_discussion</item>
+        <item>@drawable/menu_community</item>
+    </array>
+
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
 </resources>

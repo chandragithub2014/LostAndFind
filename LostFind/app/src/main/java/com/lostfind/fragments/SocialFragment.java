@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -48,6 +49,7 @@ import com.lostfind.R;
 import com.lostfind.application.MyApplication;
 import com.lostfind.googleintegration.GoogleSignIn;
 import com.lostfind.interfaces.SocialIntgration;
+import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.BikeConstants;
 
 /**
@@ -162,6 +164,9 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         login.setOnClickListener(this);
         loginEmail = (EditText)loginLayout.findViewById(R.id.login_email);
         loginPassword = (EditText)loginLayout.findViewById(R.id.login_pwd);
+        sign_up = (TextView)loginLayout.findViewById(R.id.newuser);
+        sign_up.setOnClickListener(this);
+
 
 
     }
@@ -175,8 +180,10 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         gPlus.setOnClickListener(this);
         ImageButton fBook = (ImageButton)loginLayout.findViewById(R.id.fbook);
         fBook.setOnClickListener(this);
-        sign_up = (TextView)loginLayout.findViewById(R.id.register_login);
-        sign_up.setOnClickListener(this);
+        TextView resetPasswordBtn = (TextView)loginLayout.findViewById(R.id.forgot_login);
+        resetPasswordBtn.setOnClickListener(this);
+
+
     }
 /*
     private void initializeGoogleSignIn(){
@@ -235,13 +242,19 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
                  fbLogin();
                 //onFblogin();
                 break;
-            case R.id.register_login:
+            case R.id.newuser:
                 getFragmentManager().beginTransaction()
                         .replace(mContainerId,  RegistrationFragment.newInstance("", ""))
                         .commit();
                 break;
             case R.id.login:
                  validateLogin();
+                break;
+            case R.id.forgot_login:
+                getFragmentManager().beginTransaction()
+                        .replace(mContainerId,  PasswordResetFragment.newInstance("", ""))
+                        .addToBackStack(null)
+                        .commit();
                 break;
 
         }
@@ -261,7 +274,9 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
                     if(password.equalsIgnoreCase(jsonPassVal)){
         //                launchMapSlidingMenu();
                         sharedUtils.saveStringPreferences(getActivity(),"loginType","emailProfile");
-                        getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+                    //    getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+
+                       callSlidingMenu();
                     }else{
                         Toast.makeText(getActivity(),"Wrong password",Toast.LENGTH_LONG).show();
                     }
@@ -441,7 +456,8 @@ if(accessTokenTracker!=null && profileTracker!=null){
             /*Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
             startActivity(i);
             getActivity().finish();*/
-            getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+            //getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
+            callSlidingMenu();
         }
     }
 
@@ -514,5 +530,11 @@ if(accessTokenTracker!=null && profileTracker!=null){
     @Override
     public void receiveGoogleApiClient(GoogleApiClient mGoogleApiClient) {
         this.mGoogleApiClient = mGoogleApiClient;
+    }
+
+    private void callSlidingMenu(){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        startActivity(i);
+        getActivity().finish();
     }
 }

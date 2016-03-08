@@ -3,6 +3,7 @@ package com.lostfind.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -28,6 +29,8 @@ public class SplashScreenFragment extends Fragment {
 
     View view = null;
     int mContainerId = -1;
+    private Handler handler;
+    private Runnable callback;
 
     public SplashScreenFragment() {
         // Required empty public constructor
@@ -58,6 +61,7 @@ public class SplashScreenFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        handler = new Handler();
     }
 
     @Override
@@ -68,12 +72,26 @@ public class SplashScreenFragment extends Fragment {
         mContainerId = container.getId();
         Toolbar mtoolBar = (Toolbar)((AppCompatActivity) getActivity()).findViewById(R.id.toolbar);
         mtoolBar.setVisibility(View.GONE);
-        Thread timerThread = new Thread(){
+
+        callback = new Runnable() {
+            @Override
+            public void run() {
+                getFragmentManager().beginTransaction()
+                        .replace(mContainerId,  SocialFragment.newInstance("", ""))
+                        .commit();
+            }
+        };
+        handler.postDelayed(callback, 5000);
+      /*  Thread timerThread = new Thread(){
             public void run(){
                 try{
                     sleep(3000);
                 }catch(InterruptedException e){
+
                     e.printStackTrace();
+                    getFragmentManager().beginTransaction()
+                            .replace(mContainerId,  SocialFragment.newInstance("", ""))
+                            .commit();
                 }finally{
 
                     getFragmentManager().beginTransaction()
@@ -82,8 +100,14 @@ public class SplashScreenFragment extends Fragment {
                 }
             }
         };
-        timerThread.start();
+        timerThread.start();*/
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        handler.removeCallbacks(callback);
+
+    }
 }

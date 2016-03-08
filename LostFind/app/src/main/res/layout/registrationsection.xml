@@ -46,13 +46,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/line"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot username / password ?"
          android:layout_gravity="center"
-        android:id="@+id/register_login"
+        android:id="@+id/forgot_login"
         />
 </LinearLayout>
 <!--

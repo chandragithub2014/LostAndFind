@@ -4,15 +4,18 @@
 <RelativeLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
-android:layout_height="wrap_content">
+android:layout_height="wrap_content"
+
+    >
 
 
 <TextView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Map"
+    android:text="SiiK"
     android:id="@+id/title"
     android:gravity="center"
+    android:textSize="30dp"
 
     />
 
@@ -28,12 +31,15 @@ android:layout_height="wrap_content">
 
 
     <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/map_icon"
         android:layout_margin="1dp"
-        android:src="@drawable/ic_launcher"
-        android:visibility="gone"
+        android:src="@drawable/alert_icon"
+
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>
+
+
+<!--  android:background="#FFFF00"-->

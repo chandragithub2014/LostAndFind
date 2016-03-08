@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/ic_plane_bg"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#fff799"
+        android:layout_margin="16dp">
+
+        <TextView
+            android:id="@+id/TextView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="35sp"
+            android:gravity="center"
+            android:background="#2b1464"
+            android:textColor="#ffffff"
+            android:text="Register" />
+
+        <TextView
+            android:id="@+id/TextView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/reg_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextstyle"
+            android:layout_marginLeft="10dp"
+            android:hint="Name" />
+
+        <TextView
+            android:id="@+id/TextView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:text="Email/ User Name" />
+
+        <EditText
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_email"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/edittextstyle"
+            android:hint="Email /User Name" />
+
+        <TextView
+            android:id="@+id/TextView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:text="Phone Number" />
+
+        <EditText
+            android:id="@+id/user_mobile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/edittextstyle"
+            android:layout_marginLeft="10dp"
+            android:hint="Phone Number" />
+
+        <TextView
+            android:id="@+id/TextView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:text="New Password" />
+
+        <EditText
+            android:id="@+id/register_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextstyle"
+
+            android:layout_marginLeft="10dp"
+            android:hint="New Password" />
+
+        <TextView
+            android:id="@+id/TextView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:text="Confirm Password" />
+
+        <EditText
+            android:id="@+id/retype_pwd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/edittextstyle"
+            android:hint="Confirm Password" />
+
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:background="#481fbe"
+            android:text="Register" />
+
+
+        <ImageButton
+            android:id="@+id/footer_img_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_footerlogo"
+            android:layout_gravity="left"/>
+    </LinearLayout>
+    >
+
+</ScrollView>
