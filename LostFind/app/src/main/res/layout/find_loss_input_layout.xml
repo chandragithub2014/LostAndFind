@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    >
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Description: Eg:Computer,mobiles Etc.)"
+    android:background="@drawable/edittextnewstyle"
+    android:id="@+id/find_loss_et1"
+    android:layout_marginTop="10dp"
+    android:paddingLeft="5dp"
+
+   />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Description: Eg:Computer,mobiles Etc.)"
+        android:background="@drawable/edittextnewstyle"
+        android:drawableRight="@drawable/ic_down_arrow"
+        android:id="@+id/find_loss_selector"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location (Can add more than 1)"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/find_loss_location"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"/>
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date:(Eg.Between THIS and THAT date)"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/find_loss_date"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"/>
+
+    <EditText
+    android:inputType="textMultiLine"
+        android:id="@+id/additional_info"
+    android:lines="4"
+    android:minLines="6"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:hint="Additional information"
+    android:gravity="top|left"
+    android:maxLines="10"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+        android:layout_marginTop="10dp"
+    android:scrollbars="vertical"
+    android:background="@drawable/edittextnewstyle"
+    />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Reward Option"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/find_loss_reward_option"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="5dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:id="@+id/find_loss_report"
+        android:layout_marginTop="10dp"
+        android:text="Report"
+        android:background="@drawable/buttonshape"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="right|bottom" />
+
+</LinearLayout>
+</ScrollView>

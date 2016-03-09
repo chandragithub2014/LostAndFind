@@ -1,6 +1,7 @@
 package com.lostfind.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -24,7 +25,8 @@ import com.lostfind.application.MyApplication;
 
     @Override
     public void onConnected(Bundle bundle) {
-
+       Log.d("TAG", "OnConnected");
+        signOut();
     }
 
     @Override
@@ -48,7 +50,21 @@ import com.lostfind.application.MyApplication;
         return instance;
     }
 
-    public void signOut(){
+    public void init(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        // [END configure_signin]
+
+        // [START build_client]
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(MyApplication.getInstance().getActivity())
+                .enableAutoManage(MyApplication.getInstance().getActivity() /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+    }
+    public void signOut() {
 
         /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -57,17 +73,18 @@ import com.lostfind.application.MyApplication;
                 .enableAutoManage(MyApplication.getInstance().getActivity() *//* FragmentActivity *//*, this *//* OnConnectionFailedListener *//*)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();*/
-
-        Auth.GoogleSignInApi.signOut(MyApplication.getInstance().getmGoogleAPIClient()).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        Toast.makeText(MyApplication.getInstance().getActivity(),"Signout:::",Toast.LENGTH_LONG).show();
-                  //     status.getStatusMessage()
-                        // [START_EXCLUDE]
-                  //      updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
+         if (mGoogleApiClient.isConnected()){
+            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            Toast.makeText(MyApplication.getInstance().getActivity(), "Signout:::", Toast.LENGTH_LONG).show();
+                            //     status.getStatusMessage()
+                            // [START_EXCLUDE]
+                            //      updateUI(false);
+                            // [END_EXCLUDE]
+                        }
+                    });
+        }
     }
 }

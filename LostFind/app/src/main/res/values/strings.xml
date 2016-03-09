@@ -13,6 +13,7 @@
         <item>Report History</item>
         <item>Discussion</item>
         <item>Community</item>
+        <item>Logout</item>
     </string-array>
 
 
@@ -24,8 +25,18 @@
         <item>@drawable/menu_reporthistory</item>
         <item>@drawable/menu_discussion</item>
         <item>@drawable/menu_community</item>
+        <item>@drawable/ic_logout</item>
     </array>
 
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
+
+
+    <string-array name="array_name">
+        <item>Computers</item>
+        <item>Mobiles</item>
+        <item>Books</item>
+        <item>iPad</item>
+        <item>Tablets</item>
+    </string-array>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#8f3ebe"
+    android:background="#2b1464"
     android:id="@+id/social_login"
     >
 <LinearLayout
@@ -29,6 +29,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
         android:id="@+id/fbook"
         android:layout_gravity="center_vertical"
         android:background="@drawable/fb"
@@ -38,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:id="@+id/gplus"
+        android:layout_marginLeft="16dp"
         android:background="@drawable/gplus"
         />
 
@@ -46,13 +48,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/line"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot username / password ?"
+        android:textColor="#ffffff"
+        android:paddingTop="5dp"
          android:layout_gravity="center"
         android:id="@+id/forgot_login"
         />

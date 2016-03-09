@@ -21,7 +21,9 @@ import com.facebook.login.LoginManager;
 import com.lostfind.MainActivity;
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.fragments.GoogleSignOut;
 import com.lostfind.fragments.PasswordResetFragment;
+import com.lostfind.fragments.ReportLossFragment;
 import com.lostfind.fragments.SearchFragment;
 
 
@@ -120,10 +122,10 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 break;
             case 1:
                 Bundle args = new Bundle();
-                Fragment f = new SearchFragment();
+                Fragment reportLossFrag = new ReportLossFragment();
 
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.mapparentLayout,f)
+                        .replace(R.id.mapparentLayout,reportLossFrag)
                         .commit();
                 break;
             case 2:
@@ -135,6 +137,10 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .commit();
                 break;
             case 3:
+            case 4:
+            case 5:
+            case 6:
+
                 Fragment fff = new SearchFragment();
 
                 getSupportFragmentManager().beginTransaction()
@@ -142,7 +148,7 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .commit();
                 break;
 
-            case 4:
+            case 7:
               /*  SharedPreferencesUtils  prefs = new SharedPreferencesUtils();
                 prefs.saveBooleanPreferences(SlidingMenuActivity.this, BikeConstants.BIKE_BOOLEAN_PREFS_DATA, false);*/
 
@@ -152,8 +158,14 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 startActivity(i);
                 finish();*/
 
+                String loginType  = sharedPreferencesUtils.getStringPreferences(this,"loginType");
+                if(loginType.equalsIgnoreCase("facebookprofile")) {
+                    disconnectFromFacebook();
+                }
+                if(loginType.equalsIgnoreCase("googleprofile")) {
+                    GoogleSignOut.getInstance().init();
+                }
 
-                disconnectFromFacebook();
                 Intent i = new Intent(SlidingMenuActivity.this, MainActivity.class); // Your list's Intent
                 //i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
@@ -163,6 +175,8 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 this.overridePendingTransition(0, 0);
                 startActivity(i);
                 break;
+
+
         }
     }
 

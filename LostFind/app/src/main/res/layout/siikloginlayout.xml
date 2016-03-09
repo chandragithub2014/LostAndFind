@@ -24,14 +24,14 @@
         layout="@layout/loginlayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="54"></include>
+        android:layout_weight="50"></include>
 
     <include android:id="@+id/registerview"
         layout="@layout/registrationsection"
 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="20"></include>
+        android:layout_weight="15"></include>
     <include android:id="@+id/tclayout"
         layout="@layout/tandc"
         android:layout_width="match_parent"

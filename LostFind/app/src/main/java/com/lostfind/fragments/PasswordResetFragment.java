@@ -1,12 +1,16 @@
 package com.lostfind.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.lostfind.MainActivity;
 import com.lostfind.R;
 
 /**
@@ -14,7 +18,7 @@ import com.lostfind.R;
  * Use the {@link PasswordResetFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PasswordResetFragment extends Fragment {
+public class PasswordResetFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -23,7 +27,7 @@ public class PasswordResetFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+View view = null;
 
     public PasswordResetFragment() {
         // Required empty public constructor
@@ -60,7 +64,26 @@ public class PasswordResetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_password_reset, container, false);
+        view =  inflater.inflate(R.layout.fragment_password_reset, container, false);
+        Button resetPwd = (Button)view.findViewById(R.id.resetbtn);
+        resetPwd.setOnClickListener(this);
+        return view;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.resetbtn:
+                Toast.makeText(getActivity(),"Password Reset Done",Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getActivity(), MainActivity.class); // Your list's Intent
+                //i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+                getActivity().overridePendingTransition(0, 0);
+                getActivity().finish();
+
+                getActivity().overridePendingTransition(0, 0);
+                startActivity(i);
+                break;
+        }
+    }
 }

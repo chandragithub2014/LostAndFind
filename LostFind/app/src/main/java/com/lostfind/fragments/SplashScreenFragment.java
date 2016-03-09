@@ -81,7 +81,7 @@ public class SplashScreenFragment extends Fragment {
                         .commit();
             }
         };
-        handler.postDelayed(callback, 5000);
+        handler.postDelayed(callback, 2000);
       /*  Thread timerThread = new Thread(){
             public void run(){
                 try{
