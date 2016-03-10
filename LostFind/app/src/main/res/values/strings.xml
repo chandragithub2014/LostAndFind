@@ -39,4 +39,12 @@
         <item>iPad</item>
         <item>Tablets</item>
     </string-array>
+
+    <string-array name="array_location">
+        <item>Malaysia</item>
+        <item>Mumbai</item>
+        <item>Hyd</item>
+        <item>Kolkatta</item>
+        <item>Newyork</item>
+    </string-array>
 </resources>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lostfind.DBManager.SiikDBManager;
 import com.lostfind.R;
 
 /**
@@ -72,7 +73,7 @@ public class SplashScreenFragment extends Fragment {
         mContainerId = container.getId();
         Toolbar mtoolBar = (Toolbar)((AppCompatActivity) getActivity()).findViewById(R.id.toolbar);
         mtoolBar.setVisibility(View.GONE);
-
+        callSiikDB();
         callback = new Runnable() {
             @Override
             public void run() {
@@ -109,5 +110,9 @@ public class SplashScreenFragment extends Fragment {
         super.onPause();
         handler.removeCallbacks(callback);
 
+    }
+
+    private void callSiikDB(){
+        new SiikDBManager(getActivity()).load();
     }
 }

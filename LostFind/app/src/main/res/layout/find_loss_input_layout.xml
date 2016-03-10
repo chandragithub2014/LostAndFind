@@ -14,7 +14,7 @@
     android:layout_height="wrap_content"
     android:hint="Description: Eg:Computer,mobiles Etc.)"
     android:background="@drawable/edittextnewstyle"
-    android:id="@+id/find_loss_et1"
+    android:id="@+id/find_loss_desc"
     android:layout_marginTop="10dp"
     android:paddingLeft="5dp"
 
@@ -30,20 +30,20 @@
         android:paddingLeft="5dp"/>
 
 
-    <EditText
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Location (Can add more than 1)"
+        android:hint="Select Location"
         android:background="@drawable/edittextnewstyle"
         android:id="@+id/find_loss_location"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"/>
 
 
-    <EditText
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Date:(Eg.Between THIS and THAT date)"
+        android:hint="Select Date"
         android:background="@drawable/edittextnewstyle"
         android:id="@+id/find_loss_date"
         android:layout_marginTop="10dp"

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class MyApplication extends Application {
     JSONObject publishJSON;
     AppCompatActivity activity;
     GoogleApiClient mGoogleAPIClient;
+    private SQLiteDatabase configDB;
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
   /*  private static final String TWITTER_KEY = "LEZjsy3ZQwyscBjvLdaz7bNgv";
     private static final String TWITTER_SECRET = "CTsRGP431ghMRSeeDadFxn5usbh4exlmD7qQMINch258Cb3JX9";*/
@@ -78,6 +80,14 @@ public class MyApplication extends Application {
 
     public void setmGoogleAPIClient(GoogleApiClient mGoogleAPIClient) {
         this.mGoogleAPIClient = mGoogleAPIClient;
+    }
+
+    public SQLiteDatabase getConfigDB() {
+        return configDB;
+    }
+
+    public void setConfigDB(SQLiteDatabase configDB) {
+        this.configDB = configDB;
     }
 }
 
