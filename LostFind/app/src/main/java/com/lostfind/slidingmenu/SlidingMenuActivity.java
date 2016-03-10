@@ -105,14 +105,14 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
 
     private void displayView(int position) {
         switch (position) {
-            case  0 :
+           /* case  0 :
                 Log.d("SlidingMenuActivity", "display View " + position);
-              /*  getFragmentManager().beginTransaction()
+              *//*  getFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout, new BikePoolerMapFragment())
-                        .commit();*/
-            /*    Intent mapIntent = new Intent(this,MainActivity.class);
+                        .commit();*//*
+            *//*    Intent mapIntent = new Intent(this,MainActivity.class);
                 startActivity(mapIntent);
-                finish();*/
+                finish();*//*
 
                 Fragment searchFrag = new SearchFragment();
 
@@ -135,16 +135,25 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,ff)
                         .commit();
-                break;
+                break;*/
+            case 0:
+            case 1:
+            case 2:
             case 3:
             case 4:
             case 5:
             case 6:
 
-                Fragment fff = new SearchFragment();
+              /*  Fragment fff = new SearchFragment();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,fff)
+                        .commit();*/
+                Bundle args = new Bundle();
+                Fragment reportLossFrag = new ReportLossFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,reportLossFrag)
                         .commit();
                 break;
 
