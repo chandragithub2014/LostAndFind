@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
@@ -25,6 +26,7 @@ import com.lostfind.fragments.GoogleSignOut;
 import com.lostfind.fragments.PasswordResetFragment;
 import com.lostfind.fragments.ReportLossFragment;
 import com.lostfind.fragments.SearchFragment;
+import com.lostfind.fragments.UserProfileFragment;
 
 
 public class SlidingMenuActivity extends AppCompatActivity implements FragmentDrawer.FragmentDrawerListener{
@@ -34,14 +36,20 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
 
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
-    int defaultPostion = 2;
+    int defaultPostion = 0;
     String currentLocation = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sliding_menu);
-        Bundle bundle=getIntent().getExtras();
+
+        if(getIntent().getExtras()!=null) {
+            Bundle bundle = getIntent().getExtras();
+            defaultPostion = bundle.getInt("position");
+            Toast.makeText(getApplicationContext(),"DefaultPosition::::"+defaultPostion,Toast.LENGTH_LONG).show();
+        }
+
 /*
 "position", 1);
                 bundle.putString("from"
@@ -137,9 +145,22 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .commit();
                 break;*/
             case 0:
+                Fragment userSettingsFrag = new UserProfileFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,userSettingsFrag)
+                        .commit();
+                break;
+            case 3:
+                Fragment searchFrag = new SearchFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,searchFrag)
+                        .commit();
+                break;
             case 1:
             case 2:
-            case 3:
+
             case 4:
             case 5:
             case 6:

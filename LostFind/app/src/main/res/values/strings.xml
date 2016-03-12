@@ -47,4 +47,7 @@
         <item>Kolkatta</item>
         <item>Newyork</item>
     </string-array>
+    <string name="location_prompt">Location</string>
+    <string name="category_prompt">Category</string>
+
 </resources>

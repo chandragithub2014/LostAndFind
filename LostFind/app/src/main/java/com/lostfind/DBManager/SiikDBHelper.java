@@ -1,8 +1,12 @@
 package com.lostfind.DBManager;
 
+import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.lostfind.application.MyApplication;
 
@@ -34,4 +38,25 @@ public class SiikDBHelper {
 
         return (int) rowId;
     }
+
+
+    public Cursor getSearchResults(String category,String loc,Context ctx){
+        Cursor searchCursor = null;
+        try{
+           Toast.makeText(ctx,"C"+category+" "+loc,Toast.LENGTH_LONG).show();
+            searchCursor = MyApplication.getInstance().getConfigDB()
+                    .query("lostorfound",
+                            null,
+                            "category = "
+                                    + "'"+category+"' and location = "
+                                    + "'"+loc+"'", null, null, null, null);
+
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return searchCursor;
+    }
 }
+

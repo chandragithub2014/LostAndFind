@@ -16,6 +16,7 @@ android:layout_height="wrap_content"
     android:id="@+id/title"
     android:gravity="center"
     android:textSize="30dp"
+    android:textColor="#481fbe"
 
     />
 

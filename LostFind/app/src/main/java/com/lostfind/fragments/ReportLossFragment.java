@@ -1,33 +1,57 @@
 package com.lostfind.fragments;
 
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.Toast;
 
 import com.lostfind.DBManager.SiikDBHelper;
 import com.lostfind.R;
+import com.lostfind.slidingmenu.SlidingMenuActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -39,6 +63,7 @@ import java.util.Locale;
 public class ReportLossFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String TAG = "ReportLossFragment";
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -50,9 +75,10 @@ public class ReportLossFragment extends Fragment implements View.OnClickListener
 View view = null;
     String[] itemNames,locationNames;
     EditText description;
-    Button location_spinner;
+    AutoCompleteTextView location_spinner;
     Button date_btn;
     EditText additionalInfo,rewardOption;
+    ImageButton footerImage_btn;
 
     private SimpleDateFormat dateFormatter;
 
@@ -60,6 +86,14 @@ View view = null;
 
     private DatePickerDialog fromDatePickerDialog;
     protected AlertDialog myAlert;
+  Button changeImg;
+    private int PICK_IMAGE_REQUEST = 1;
+private String imageUrl="";
+
+    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
+    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
+    private static final String OUT_JSON = "/json";
+    private static final String API_KEY = "AIzaSyDixji8saFmpOFmSnKXY6-uP_2mnDYG3Js";
 
     public ReportLossFragment() {
         // Required empty public constructor
@@ -100,6 +134,8 @@ View view = null;
         locationNames = getResources().getStringArray(R.array.array_location);
         view =  inflater.inflate(R.layout.fragment_report_loss, container, false);
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        footerImage_btn = (ImageButton)view.findViewById(R.id.footer_img_btn);
+        footerImage_btn.setOnClickListener(this);
         initInputFieldView(view);
         return view;
     }
@@ -110,7 +146,7 @@ View view = null;
          spinnerType = (Button)inputScrollView.findViewById(R.id.find_loss_selector);
         description = (EditText)inputScrollView.findViewById(R.id.find_loss_desc);
         spinnerType.setOnClickListener(this);
-        location_spinner = (Button)inputScrollView.findViewById(R.id.find_loss_location);
+        location_spinner = (AutoCompleteTextView)inputScrollView.findViewById(R.id.find_loss_location);
         location_spinner.setOnClickListener(this);
         date_btn  = (Button)inputScrollView.findViewById(R.id.find_loss_date);
         date_btn.setOnClickListener(this);
@@ -118,19 +154,26 @@ View view = null;
         rewardOption = (EditText)inputScrollView.findViewById(R.id.find_loss_reward_option);
         Button loss_report_btn = (Button)inputScrollView.findViewById(R.id.find_loss_report);
         loss_report_btn.setOnClickListener(this);
+        changeImg = (Button)v.findViewById(R.id.chng_btn);
+        changeImg.setOnClickListener(this);
+        setGoogleLocation();
 //additionalInfo,rewardOption
+    }
+
+    private void setGoogleLocation(){
+        location_spinner.setAdapter(new GooglePlacesAutocompleteAdapter(getActivity(), R.layout.list_item));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.find_loss_selector:
+          case R.id.find_loss_selector:
                 hideKeyboard();
                 launchSelector();
                 break;
-            case R.id.find_loss_location:
+           /* case R.id.find_loss_location:
                 launchLocationSelector();
-                break;
+                break;*/
             case R.id.find_loss_date:
            //     getActivity().showDialog(DATE_PICKER_ID);
                 final Calendar c = Calendar
@@ -153,6 +196,38 @@ View view = null;
             case R.id.find_loss_report:
                 popualteDateInDB();
                 break;
+            case R.id.footer_img_btn:
+                laucnchSlidingMenu();
+                break;
+            case R.id.chng_btn:
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(
+                        Intent.createChooser(intent, "Select Picture"),
+                        PICK_IMAGE_REQUEST);
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == Activity.RESULT_OK && data != null
+                && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
+                        .getContentResolver(), uri);
+                ImageView imageView = (ImageView) view
+                        .findViewById(R.id.iv_upload);
+                imageView.setImageBitmap(bitmap);
+      //          Toast.makeText(getActivity(),"URI::::"+uri,Toast.LENGTH_LONG).show();
+                imageUrl = ""+uri;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -296,6 +371,7 @@ private void popualteDateInDB(){
 
     }
     cv.put("username","b.chandrasaimohan@gmail.com");
+    cv.put("imageurl",imageUrl);
     try {
         int rowId = (Integer) new SiikDBHelper().insertSiiKData("lostorfound", cv);
         if(rowId != -1){
@@ -310,4 +386,114 @@ private void popualteDateInDB(){
         e.printStackTrace();
     }
 }
+
+    private void laucnchSlidingMenu(){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",3);
+        i.putExtras(bundle);
+        startActivity(i);
+        getActivity().finish();
+    }
+
+
+    public static ArrayList autocomplete(String input) {
+        ArrayList resultList = null;
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+        try {
+            StringBuilder sb = new StringBuilder(PLACES_API_BASE + TYPE_AUTOCOMPLETE + OUT_JSON);
+            sb.append("?key=" + API_KEY);
+            sb.append("&components=country:us");
+            sb.append("&input=" + URLEncoder.encode(input, "utf8"));
+            Log.d("BikePlaceFragment", "URL For Offer Ride:::" + sb.toString());
+            URL url = new URL(sb.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            // Load the results into a StringBuilder
+            int read;
+            char[] buff = new char[1024];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
+            }
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Error processing Places API URL", e);
+            return resultList;
+        } catch (IOException e) {
+            Log.e(TAG, "Error connecting to Places API", e);
+            return resultList;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+
+        try {
+            Log.d("BikePlaceFragment","Search Results:::"+jsonResults.toString());
+            // Create a JSON object hierarchy from the results
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+            JSONArray predsJsonArray = jsonObj.getJSONArray("predictions");
+
+            // Extract the Place descriptions from the results
+            resultList = new ArrayList(predsJsonArray.length());
+            for (int i = 0; i < predsJsonArray.length(); i++) {
+                System.out.println(predsJsonArray.getJSONObject(i).getString("description"));
+                System.out.println("============================================================");
+                resultList.add(predsJsonArray.getJSONObject(i).getString("description"));
+            }
+        } catch (JSONException e) {
+            Log.e("ReportLossFragment", "Cannot process JSON results", e);
+        }
+        return resultList;
+    }
+
+
+
+    class GooglePlacesAutocompleteAdapter extends ArrayAdapter implements Filterable {
+        private ArrayList resultList;
+
+        public GooglePlacesAutocompleteAdapter(Context context, int textViewResourceId) {
+            super(context, textViewResourceId);
+        }
+
+        @Override
+        public int getCount() {
+            return resultList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return resultList.get(position);
+        }
+
+        @Override
+        public Filter getFilter() {
+            Filter filter = new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    FilterResults filterResults = new FilterResults();
+                    if (constraint != null) {
+                        // Retrieve the autocomplete results.
+                        resultList = autocomplete(constraint.toString());
+
+                        // Assign the data to the FilterResults
+                        filterResults.values = resultList;
+                        filterResults.count = resultList.size();
+                    }
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    if (results != null && results.count > 0) {
+                        notifyDataSetChanged();
+                    } else {
+                        notifyDataSetInvalidated();
+                    }
+                }
+            };
+            return filter;
+        }
+    }
 }

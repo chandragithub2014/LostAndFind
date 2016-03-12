@@ -116,7 +116,7 @@ public class SiikDBManager extends SQLiteOpenHelper {
                     .getDatabasePath(CONFIG_DB_NAME)
                     .toString(), null, SQLiteDatabase.OPEN_READWRITE);
             MyApplication.getInstance().setConfigDB(configDB);
-            Toast.makeText(localContext,"DB Created",Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(localContext,"DB Created",Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -24,20 +24,26 @@
         android:layout_height="wrap_content"
         android:hint="Description: Eg:Computer,mobiles Etc.)"
         android:background="@drawable/edittextnewstyle"
-        android:drawableRight="@drawable/ic_down_arrow"
         android:id="@+id/find_loss_selector"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"/>
 
 
-    <Button
+
+
+
+    <AutoCompleteTextView
+        android:id="@+id/find_loss_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ems="10"
         android:hint="Select Location"
         android:background="@drawable/edittextnewstyle"
-        android:id="@+id/find_loss_location"
         android:layout_marginTop="5dp"
-        android:paddingLeft="5dp"/>
+        android:paddingLeft="5dp"
+        >
+        <requestFocus />
+    </AutoCompleteTextView>
 
 
     <Button

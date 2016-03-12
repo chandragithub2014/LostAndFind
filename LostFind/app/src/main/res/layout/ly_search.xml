@@ -1,0 +1,113 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/ic_plane_bg" >
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:text="Search"
+        android:textSize="20sp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header"
+        android:background="#FFF799"
+        android:orientation="horizontal"
+        android:padding="4dp" >
+
+        <EditText
+            android:id="@+id/search_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/edittextstyle"
+            android:hint="Decription (e.g.:computer, mobile phone,blue, etc.)"
+            android:inputType="textMultiLine"
+            android:textSize="10dp"
+            android:lines="2"
+            android:maxLines="2"
+            android:minLines="2" />
+
+        <AutoCompleteTextView
+            android:id="@+id/find_loss_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Search Location"
+            android:background="@drawable/edittextnewstyle"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/search_comments"
+            >
+            <requestFocus />
+        </AutoCompleteTextView>
+
+        <Spinner
+            android:id="@+id/category"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/find_loss_location"
+            android:entries="@array/array_name"
+            android:prompt="@string/category_prompt" />
+
+        <Spinner
+            android:id="@+id/location"
+            android:layout_marginTop="5dp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/search_comments"
+            android:layout_toRightOf="@+id/category"
+            android:entries="@array/array_location"
+            android:prompt="@string/location_prompt"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/dateButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/find_loss_location"
+            android:background="@drawable/buttonshape"
+                android:text="Date"
+                     android:textSize="12dp"
+            android:textColor="#ffffff"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/category" />
+
+        <Button
+            android:id="@+id/search_btn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/dateButton"
+            android:layout_margin="4dp"
+
+            android:background="@drawable/buttonshape"
+            android:padding="4dp"
+            android:text="Search"
+            android:textColor="@android:color/white"
+            android:textSize="16dp"
+         />
+    </RelativeLayout>
+    <LinearLayout android:id="@+id/tablelayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_below="@+id/relativeLayout1">
+        
+    </LinearLayout>
+
+</RelativeLayout>
