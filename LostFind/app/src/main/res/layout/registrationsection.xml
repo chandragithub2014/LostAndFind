@@ -5,13 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="#2b1464"
     android:id="@+id/social_login"
     >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="#FFffFF"/>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:layout_marginTop="5dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:id="@+id/social_login_child"
@@ -21,45 +27,46 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login With"
+        android:text="Register With"
         android:layout_gravity="center_vertical"
         android:textColor="#ffffff"
-        android:paddingLeft="50dp"
-        android:paddingRight="5dp"/>
+        android:layout_marginLeft="20dp"
+        android:paddingRight="5dp"
+        android:fontFamily="sans-serif-thin"
+        android:textStyle="normal"
+        android:textSize="15sp"/>
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+       android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:id="@+id/fbook"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/fb"
+        android:background="@drawable/ic_fb"
       />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:id="@+id/gplus"
-        android:layout_marginLeft="16dp"
-        android:background="@drawable/gplus"
+        android:background="@drawable/ic_gplus"
         />
 
 
 </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/line"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot username / password ?"
         android:textColor="#ffffff"
-        android:paddingTop="5dp"
+        android:layout_marginTop="5dp"
          android:layout_gravity="center"
         android:id="@+id/forgot_login"
-        />
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textSize="18sp"
+        ></TextView>
 </LinearLayout>
 <!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

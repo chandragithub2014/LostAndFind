@@ -23,19 +23,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/header"
-        android:background="#FFF799"
+
         android:orientation="horizontal"
-        android:padding="4dp" >
+        android:padding="4dp"
+        android:layout_margin="5dp">
 
         <EditText
             android:id="@+id/search_comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="@drawable/edittextstyle"
+            android:background="@drawable/edittextnewstyle"
             android:hint="Decription (e.g.:computer, mobile phone,blue, etc.)"
             android:inputType="textMultiLine"
-            android:textSize="10dp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textSize="20sp"
             android:lines="2"
             android:maxLines="2"
             android:minLines="2" />
@@ -54,14 +57,27 @@
             <requestFocus />
         </AutoCompleteTextView>
 
-        <Spinner
+      <!--  <Spinner
             android:id="@+id/category"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/find_loss_location"
             android:entries="@array/array_name"
-            android:prompt="@string/category_prompt" />
+            android:prompt="@string/category_prompt"
+            />-->
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="select category"
+            android:layout_below="@+id/find_loss_location"
+            android:background="@drawable/buttonshapesearchresults"
+            android:id="@+id/category"
+            android:layout_marginTop="5dp"
+
+            android:textSize="12dp"
+            android:textColor="#cbcac8"/>
 
         <Spinner
             android:id="@+id/location"
@@ -70,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/search_comments"
             android:layout_toRightOf="@+id/category"
-            android:entries="@array/array_location"
             android:prompt="@string/location_prompt"
             android:visibility="gone"/>
 
@@ -79,35 +94,36 @@
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/find_loss_location"
-            android:background="@drawable/buttonshape"
+            android:background="@drawable/buttonshapesearchresults"
                 android:text="Date"
                      android:textSize="12dp"
-            android:textColor="#ffffff"
+            android:textColor="#cbcac8"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:layout_toRightOf="@+id/category" />
 
-        <Button
+        <ImageView
             android:id="@+id/search_btn"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/dateButton"
-            android:layout_margin="4dp"
-
-            android:background="@drawable/buttonshape"
+            android:layout_below="@+id/find_loss_location"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_search"
+            android:scaleType="centerInside"
             android:padding="4dp"
-            android:text="Search"
-            android:textColor="@android:color/white"
-            android:textSize="16dp"
+            android:layout_toRightOf="@+id/dateButton"
          />
     </RelativeLayout>
-    <LinearLayout android:id="@+id/tablelayout"
+
+        <include
+            android:id="@+id/results_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            android:layout_below="@+id/relativeLayout1">
-        
-    </LinearLayout>
+            layout="@layout/searchresults"
+            android:layout_below="@+id/relativeLayout1"
+            ></include>
+
 
 </RelativeLayout>

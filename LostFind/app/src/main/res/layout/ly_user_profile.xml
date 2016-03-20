@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/parentshape"
+        android:background="@drawable/transparentshape"
         android:padding="4dp" >
 
         <FrameLayout
@@ -49,10 +49,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/frameLayout1"
-            android:background="@drawable/edittextstyle"
+            android:background="@drawable/edittextnewstyle"
             android:ems="10"
             android:hint="First Name"
-            android:inputType="textPersonName" >
+            android:paddingLeft="5dp"
+            android:inputType="textPersonName"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
         </EditText>
 
         <EditText
@@ -62,86 +69,89 @@
             android:layout_below="@+id/firstName"
             android:layout_marginTop="12dp"
             android:layout_toRightOf="@+id/frameLayout1"
-            android:background="@drawable/edittextstyle"
+            android:background="@drawable/edittextnewstyle"
             android:ems="10"
-            android:hint="Last Name" />
+            android:paddingLeft="5dp"
+            android:hint="Last Name"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
         <EditText
             android:id="@+id/userId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lastName"
             android:layout_marginTop="12dp"
-            android:layout_toRightOf="@+id/frameLayout1"
-            android:background="@drawable/edittextstyle"
+            android:layout_below="@+id/frameLayout1"
+            android:background="@drawable/edittextnewstyle"
             android:ems="10"
-            android:hint="User Name" />
+            android:paddingLeft="5dp"
+            android:hint="User Name"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
-        <EditText
-            android:id="@+id/phoneNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userId"
-            android:layout_marginTop="12dp"
-            android:layout_toRightOf="@+id/frameLayout1"
-            android:background="@drawable/edittextstyle"
-            android:ems="10"
-            android:hint="Phone Number"
-            android:inputType="phone" />
 
         <EditText
             android:id="@+id/emailId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/frameLayout1"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/edittextstyle"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/userId"
+            android:background="@drawable/edittextnewstyle"
             android:ems="10"
-            android:hint="Email Address"
-            android:inputType="textEmailAddress" />
+            android:paddingLeft="5dp"
+            android:hint="Click to add email address"
+            android:inputType="textEmailAddress"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
+
 
         <EditText
-            android:id="@+id/comments"
+            android:id="@+id/phoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/emailId"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/edittextstyle"
-            android:hint="Comments"
-            android:inputType="textMultiLine"
-            android:lines="3"
-            android:maxLines="3"
-            android:minLines="3" />
+            android:background="@drawable/edittextnewstyle"
+            android:ems="10"
+            android:paddingLeft="5dp"
+            android:hint="Click to add phone number"
+            android:layout_marginTop="10dp"
+            android:inputType="phone"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+
 
         <Button
             android:id="@+id/save_btn"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/comments"
-            android:layout_margin="4dp"
-            android:layout_marginTop="30dp"
+            android:layout_below="@+id/phoneNumber"
+            android:layout_marginTop="15dp"
             android:background="@drawable/buttonshape"
             android:padding="4dp"
-            android:text="Submit"
+            android:text="Edit/Save"
             android:textColor="@android:color/white"
             android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
 
-        <Button
-            android:id="@+id/Edit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/comments"
-            android:layout_margin="4dp"
-            android:layout_marginTop="30dp"
-            android:layout_toLeftOf="@+id/save_btn"
-            android:background="@drawable/buttonshape"
-            android:padding="4dp"
-            android:text="Edit Information"
-            android:textColor="@android:color/white"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+
     </RelativeLayout>
 
 
@@ -152,7 +162,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_marginTop="16dp"
-
         android:background="@drawable/ic_footerlogo"
         />
 </RelativeLayout>

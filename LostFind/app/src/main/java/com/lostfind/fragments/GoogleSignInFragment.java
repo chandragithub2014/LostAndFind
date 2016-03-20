@@ -161,7 +161,7 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
                 e.printStackTrace();
             }
             SharedPreferencesUtils sharedUtils = new SharedPreferencesUtils();
-            sharedUtils.saveStringPreferences(getActivity(), "facebook", gmailJson.toString());
+            sharedUtils.saveStringPreferences(getActivity(), "gmail", gmailJson.toString());
 
             sharedUtils.saveStringPreferences(getActivity(), "loginType", "googleprofile");
           ////     mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));

@@ -13,7 +13,7 @@
     android:weightSum="100"
     android:layout_margin= "10dp"
 
-    android:background="@drawable/parentshape">
+    android:background="@drawable/transparentshape">
 
 <FrameLayout
     android:layout_width="match_parent"

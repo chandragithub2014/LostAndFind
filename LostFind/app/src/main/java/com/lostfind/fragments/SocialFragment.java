@@ -51,7 +51,13 @@ import com.lostfind.googleintegration.GoogleSignIn;
 import com.lostfind.interfaces.SocialIntgration;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.BikeConstants;
-
+//Roboto
+/*
+android:fontFamily="sans-serif"           // roboto regular
+android:fontFamily="sans-serif-light"     // roboto light
+android:fontFamily="sans-serif-condensed" // roboto condensed
+https://www.youtube.com/watch?v=WB4yukV3S88
+ */
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SocialFragment#newInstance} factory method to
@@ -143,7 +149,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         fBook.setOnClickListener(this);
         initializeLayout(view);*/
         initLoginLayout(view);
-        initSocialLogin(view);
+        //initSocialLogin(view);
         return view;
     }
 
@@ -164,14 +170,27 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         login.setOnClickListener(this);
         loginEmail = (EditText)loginLayout.findViewById(R.id.login_email);
         loginPassword = (EditText)loginLayout.findViewById(R.id.login_pwd);
+       //Register New User
         sign_up = (TextView)loginLayout.findViewById(R.id.newuser);
         sign_up.setOnClickListener(this);
+
+
+        LinearLayout registrationLayout  = (LinearLayout)loginLayout.findViewById(R.id.registerview);
+        //  LinearLayout loginLayout_child  = (LinearLayout)loginLayout.findViewById(R.id.social_login_child);
+
+        //social_login
+        ImageButton gPlus = (ImageButton)registrationLayout.findViewById(R.id.gplus);
+        gPlus.setOnClickListener(this);
+        ImageButton fBook = (ImageButton)registrationLayout.findViewById(R.id.fbook);
+        fBook.setOnClickListener(this);
+        TextView resetPasswordBtn = (TextView)registrationLayout.findViewById(R.id.forgot_login);
+        resetPasswordBtn.setOnClickListener(this);
 
 
 
     }
 
-    private void initSocialLogin(View v){
+   /* private void initSocialLogin(View v){
         LinearLayout loginLayout  = (LinearLayout)v.findViewById(R.id.registerview);
       //  LinearLayout loginLayout_child  = (LinearLayout)loginLayout.findViewById(R.id.social_login_child);
 
@@ -184,7 +203,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         resetPasswordBtn.setOnClickListener(this);
 
 
-    }
+    }*/
 /*
     private void initializeGoogleSignIn(){
       Log.d(TAG, "In initializeGoogleSignIn()");
@@ -320,7 +339,7 @@ private void googlePlusLogin(){
 }
 
     private void fbLogin(){
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
     }
   /*  private void initGPlus(){
 
@@ -350,16 +369,16 @@ private void googlePlusLogin(){
                                       Log.v("LoginActivity Response ", response.toString());
 
                                       try {
-                                      String    Name = object.getString("name");
+                                          String Name = object.getString("name");
 
-                                    if(object.has("email")) {
-                                        faceBookEmail  = object.getString("email");
-                                    }
-                                          Log.v("Email = ", " " + faceBookEmail);
-                                          Log.d("TAG", "Name:::"+Name);
-                                       //   Toast.makeText(getActivity(), "Name " + Name, Toast.LENGTH_LONG).show();
+                                          if (object.has("email")) {
+                                              faceBookEmail = object.getString("email");
+                                          }
+                                          Log.d("TAG", "Email = " + faceBookEmail);
+                                          Log.d("TAG", "Name:::" + Name);
+                                          //   Toast.makeText(getActivity(), "Name " + Name, Toast.LENGTH_LONG).show();
 
-
+                                          saveFacebookPreferences(Name,faceBookEmail);
                                       } catch (JSONException e) {
                                           e.printStackTrace();
                                       }
@@ -371,8 +390,7 @@ private void googlePlusLogin(){
                       request.executeAsync();
 
 
-
-                      if (profile != null) {
+                    /*  if (profile != null) {
                           displayMessage(profile);
                       } else {
                           mProfileTracker = new ProfileTracker() {
@@ -384,7 +402,7 @@ private void googlePlusLogin(){
                               }
                           };
                           mProfileTracker.startTracking();
-                      }
+                      }*/
 
                   }
 
@@ -431,9 +449,33 @@ if(accessTokenTracker!=null && profileTracker!=null){
         profileTracker.startTracking();
     }
 
+
+    private void saveFacebookPreferences(String profileName,String fBookEmail){
+        sharedUtils.saveStringPreferences(getActivity(), BikeConstants.BIKE_PREFS_DATA, profileName);
+
+
+        JSONObject fbookJson = new JSONObject();
+        try {
+            fbookJson.put("profilename", profileName);
+            fbookJson.put("profileemail",fBookEmail);
+
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        Log.d("TAG","Facebook JSON::::"+fbookJson.toString());
+        sharedUtils.saveStringPreferences(getActivity(), "facebook", fbookJson.toString());
+
+        sharedUtils.saveStringPreferences(getActivity(), "loginType", "facebookprofile");
+
+
+        callSlidingMenu();
+    }
     private void displayMessage(Profile profile){
         if(profile != null){
             Log.d("PROFILE", profile.getName());
+
             Toast.makeText(getActivity(), "Facebook Profile Name:::" + profile.getName(), Toast.LENGTH_LONG).show();
             sharedUtils.saveStringPreferences(getActivity(), BikeConstants.BIKE_PREFS_DATA, profile.getName());
 
@@ -448,6 +490,7 @@ if(accessTokenTracker!=null && profileTracker!=null){
             catch (JSONException e){
                 e.printStackTrace();
             }
+            Log.d("TAG","Facebook JSON::::"+fbookJson.toString());
             sharedUtils.saveStringPreferences(getActivity(), "facebook", fbookJson.toString());
 
             sharedUtils.saveStringPreferences(getActivity(), "loginType", "facebookprofile");

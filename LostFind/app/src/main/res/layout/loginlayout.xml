@@ -3,22 +3,10 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
    android:layout_margin="10dp"
-    android:weightSum="60"
-    android:background="#fff799"
+    android:weightSum="80"
+    android:background="@drawable/transparentshape"
     android:id="@+id/loginview"
     >
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="10"
-    android:text="Sign In"
-    android:id="@+id/label"
-    android:textSize="30dp"
-    android:textColor="#ffffff"
-    android:background="#2b1464"
-    android:gravity="center_horizontal"
-   ></TextView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -31,51 +19,60 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="User Name"
-        android:textColor="#000000"
-        android:layout_marginLeft="10dp"
-        />
+        android:text="Sign In"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:textColor="#ffffff"
+        android:layout_marginBottom="5dp"
+       />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="User Name"
             android:id="@+id/login_email"
-            android:textColor="@android:color/holo_blue_dark"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textColor="#9b9b9b"
+            android:textSize="20sp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edittextstyle"
+            android:background="@drawable/edittextnewstyle"
+            android:paddingLeft="3dp"
             />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Password"
-            android:textColor="#000000"
-            android:layout_marginLeft="10dp"
-            />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
             android:hint="Password"
+            android:textSize="20sp"
             android:id="@+id/login_pwd"
-            android:textColor="@android:color/holo_blue_dark"
+            android:textColor="#9b9b9b"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/edittextstyle"
+            android:background="@drawable/edittextnewstyle"
             android:inputType="textPassword"
+            android:paddingLeft="3dp"
             />
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textSize="25sp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:textColor="#ffffff"
             android:background="@drawable/buttonshape"
             android:textAllCaps="false"
             android:id="@+id/login"
-            android:text="Login"/>
+            android:gravity="center"
+            android:text="Go"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -84,13 +81,21 @@
             android:id="@+id/newuser"
             android:gravity="center"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="#481fbe"/>
+
+            android:textColor="#ffffff"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textSize="18sp"/>
 
 
 
     </LinearLayout>
 
+    <include android:id="@+id/registerview"
+        layout="@layout/registrationsection"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"></include>
     <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
