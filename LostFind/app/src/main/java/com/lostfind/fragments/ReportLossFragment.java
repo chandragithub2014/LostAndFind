@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -33,6 +34,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Scroller;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lostfind.DBManager.SiikDBHelper;
@@ -133,6 +135,10 @@ private String imageUrl="";
        itemNames = getResources().getStringArray(R.array.array_name);
         locationNames = getResources().getStringArray(R.array.array_location);
         view =  inflater.inflate(R.layout.fragment_report_loss, container, false);
+
+        Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+        TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
+        toolBarTitle.setText("SiiK");
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         footerImage_btn = (ImageButton)view.findViewById(R.id.footer_img_btn);
         footerImage_btn.setOnClickListener(this);
@@ -390,7 +396,7 @@ private void popualteDateInDB(){
     private void laucnchSlidingMenu(){
         Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("position",3);
+        bundle.putInt("position",4);
         i.putExtras(bundle);
         startActivity(i);
         getActivity().finish();

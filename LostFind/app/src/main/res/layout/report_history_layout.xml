@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/ic_plane_bg" >
+
+
+   <!-- <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:layout_margin="5dp">
+
+        <EditText
+            android:id="@+id/search_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/edittextnewstyle"
+            android:hint="Decription(e.g:computer,mobile etc.)"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textSize="20sp"
+            android:singleLine="true"
+            android:paddingLeft="5dp"
+             />
+
+        <AutoCompleteTextView
+            android:id="@+id/find_loss_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Search Location"
+            android:background="@drawable/edittextnewstyle"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="5dp"
+            android:layout_below="@+id/search_comments"
+            android:singleLine="true"
+            >
+            <requestFocus />
+        </AutoCompleteTextView>
+
+      &lt;!&ndash;  <Spinner
+            android:id="@+id/category"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/find_loss_location"
+            android:entries="@array/array_name"
+            android:prompt="@string/category_prompt"
+            />&ndash;&gt;
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="category"
+            android:layout_below="@+id/find_loss_location"
+            android:background="@drawable/buttonshapesearchresults"
+            android:id="@+id/category"
+            android:layout_marginTop="5dp"
+            android:textSize="12dp"
+            android:textColor="#cbcac8"/>
+
+
+
+        <Button
+            android:id="@+id/dateButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/category"
+            android:background="@drawable/buttonshapesearchresults"
+            android:text="From Date"
+            android:textSize="12dp"
+            android:textColor="#cbcac8"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            />
+
+        <Button
+            android:id="@+id/todateButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/category"
+            android:background="@drawable/buttonshapesearchresults"
+            android:text="To Date"
+            android:textSize="12dp"
+            android:textColor="#cbcac8"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@+id/dateButton" />
+
+
+        <ImageView
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/category"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_search"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:layout_toRightOf="@+id/todateButton"
+         />
+    </RelativeLayout>-->
+
+        <include
+            android:id="@+id/results_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/searchresults"
+            android:layout_below="@+id/relativeLayout1"
+            ></include>
+
+
+</RelativeLayout>

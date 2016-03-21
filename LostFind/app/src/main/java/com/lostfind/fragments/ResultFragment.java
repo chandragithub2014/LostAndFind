@@ -81,7 +81,7 @@ public class ResultFragment extends Fragment {
         mtoolBar.setVisibility(View.VISIBLE);
         TextView titleBar = (TextView)mtoolBar.findViewById(R.id.title);
         titleBar.setText("Offer Ride");
-        ImageView logout  = (ImageView)mtoolBar.findViewById(R.id.logout_icon);
+       /* ImageView logout  = (ImageView)mtoolBar.findViewById(R.id.logout_icon);
         logout.setVisibility(View.VISIBLE);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +96,7 @@ public class ResultFragment extends Fragment {
                 }
 
             }
-        });
+        });*/
         return view;
     }
 

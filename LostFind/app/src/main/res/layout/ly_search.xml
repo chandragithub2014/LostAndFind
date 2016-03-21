@@ -8,22 +8,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/ic_plane_bg" >
 
-    <TextView
-        android:id="@+id/header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:text="Search"
-        android:textSize="20sp" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
-
         android:orientation="horizontal"
         android:padding="4dp"
         android:layout_margin="5dp">
@@ -34,14 +23,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@drawable/edittextnewstyle"
-            android:hint="Decription (e.g.:computer, mobile phone,blue, etc.)"
-            android:inputType="textMultiLine"
+            android:hint="Decription(e.g:computer,mobile etc.)"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:textSize="20sp"
-            android:lines="2"
-            android:maxLines="2"
-            android:minLines="2" />
+            android:singleLine="true"
+            android:paddingLeft="5dp"
+             />
 
         <AutoCompleteTextView
             android:id="@+id/find_loss_location"
@@ -53,6 +41,7 @@
             android:layout_marginTop="5dp"
             android:paddingLeft="5dp"
             android:layout_below="@+id/search_comments"
+            android:singleLine="true"
             >
             <requestFocus />
         </AutoCompleteTextView>
@@ -68,52 +57,58 @@
             />-->
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="select category"
+            android:hint="category"
             android:layout_below="@+id/find_loss_location"
             android:background="@drawable/buttonshapesearchresults"
             android:id="@+id/category"
             android:layout_marginTop="5dp"
-
             android:textSize="12dp"
             android:textColor="#cbcac8"/>
 
-        <Spinner
-            android:id="@+id/location"
-            android:layout_marginTop="5dp"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/search_comments"
-            android:layout_toRightOf="@+id/category"
-            android:prompt="@string/location_prompt"
-            android:visibility="gone"/>
+
 
         <Button
             android:id="@+id/dateButton"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/find_loss_location"
+            android:layout_below="@+id/category"
             android:background="@drawable/buttonshapesearchresults"
-                android:text="Date"
-                     android:textSize="12dp"
+            android:text="From Date"
+            android:textSize="12dp"
             android:textColor="#cbcac8"
             android:layout_marginTop="5dp"
             android:layout_marginRight="2dp"
             android:layout_marginLeft="2dp"
-            android:layout_toRightOf="@+id/category" />
+            />
+
+        <Button
+            android:id="@+id/todateButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/category"
+            android:background="@drawable/buttonshapesearchresults"
+            android:text="To Date"
+            android:textSize="12dp"
+            android:textColor="#cbcac8"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@+id/dateButton" />
+
 
         <ImageView
             android:id="@+id/search_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/find_loss_location"
+            android:layout_below="@+id/category"
             android:layout_marginTop="10dp"
             android:src="@drawable/ic_search"
             android:scaleType="centerInside"
             android:padding="4dp"
-            android:layout_toRightOf="@+id/dateButton"
+            android:layout_toRightOf="@+id/todateButton"
          />
     </RelativeLayout>
 

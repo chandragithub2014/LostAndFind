@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
@@ -48,6 +50,9 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
 		super.onCreateView(inflater, container, savedInstanceState);
 		userProfileView = inflater.inflate(R.layout.ly_user_profile, container,
 				false);
+        Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+        TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
+        toolBarTitle.setText("SiiK");
 		 firstName = (EditText) userProfileView
 				.findViewById(R.id.firstName);
 		 lastName = (EditText) userProfileView
@@ -214,7 +219,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
 	private void laucnchSlidingMenu(){
 		Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putInt("position",3);
+		bundle.putInt("position",4);
 		i.putExtras(bundle);
 		startActivity(i);
 		getActivity().finish();

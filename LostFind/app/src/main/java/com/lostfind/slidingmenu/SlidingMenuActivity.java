@@ -22,8 +22,11 @@ import com.facebook.login.LoginManager;
 import com.lostfind.MainActivity;
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.fragments.BlankFragment;
 import com.lostfind.fragments.GoogleSignOut;
+import com.lostfind.fragments.HomeFragment;
 import com.lostfind.fragments.PasswordResetFragment;
+import com.lostfind.fragments.ReportHistory;
 import com.lostfind.fragments.ReportLossFragment;
 import com.lostfind.fragments.SearchFragment;
 import com.lostfind.fragments.UserProfileFragment;
@@ -144,26 +147,40 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .replace(R.id.mapparentLayout,ff)
                         .commit();
                 break;*/
-            case 0:
+            case 1:
                 Fragment userSettingsFrag = new UserProfileFragment();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,userSettingsFrag)
                         .commit();
                 break;
-            case 3:
+            case 4:
                 Fragment searchFrag = new SearchFragment();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,searchFrag)
                         .commit();
                 break;
-            case 1:
+            case 5:
+                Fragment reporthistory = new ReportHistory();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,reporthistory)
+                        .commit();
+                break;
+            case 0:
+                Fragment homeFrag = new HomeFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,homeFrag)
+                        .commit();
+
+                break;
             case 2:
 
-            case 4:
-            case 5:
-            case 6:
+
+            case 3:
+
 
               /*  Fragment fff = new SearchFragment();
 
@@ -178,7 +195,17 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .commit();
                 break;
 
+            case 6:
             case 7:
+
+                Fragment blankFrag = new BlankFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,blankFrag)
+                        .commit();
+                break;
+
+            case 8:
               /*  SharedPreferencesUtils  prefs = new SharedPreferencesUtils();
                 prefs.saveBooleanPreferences(SlidingMenuActivity.this, BikeConstants.BIKE_BOOLEAN_PREFS_DATA, false);*/
 

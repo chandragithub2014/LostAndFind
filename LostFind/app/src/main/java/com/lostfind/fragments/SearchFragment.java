@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -92,12 +93,16 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 		super.onCreateView(inflater, container, savedInstanceState);
 		searchView = inflater.inflate(R.layout.ly_search, container,
 				false);
+
+		Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
+		TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
+		toolBarTitle.setText("Search");
         categoryNames = getResources().getStringArray(R.array.array_name);
 		 category = (Button) searchView
 				.findViewById(R.id.category);
         category.setOnClickListener(this);
-		final Spinner location = (Spinner) searchView
-				.findViewById(R.id.location);
+	/*	final Spinner location = (Spinner) searchView
+				.findViewById(R.id.location);*/
 		final EditText comments= (EditText) searchView
 				.findViewById(R.id.search_comments);
 			location_spinner = (AutoCompleteTextView)searchView.findViewById(R.id.find_loss_location);
@@ -108,6 +113,24 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 		final Calendar c = Calendar
 					.getInstance();	
 		final Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
+		final Button toDateBtn = (Button) searchView.findViewById(R.id.todateButton);
+
+		toDateBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy",Locale.getDefault());
+				Date date = null;
+				date = new Date();
+				c.setTime(date);
+				year =  c.get(Calendar.YEAR);
+				month =  c.get(Calendar.MONTH);
+				day =   c.get(Calendar.DAY_OF_MONTH);
+				new DatePickerDialog(getActivity(), toDatePickerListener,
+						year, month,day).show();
+			}
+		});
+
 		dateBtn.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -202,7 +225,24 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 		}
 	};
 
-	
+
+	private DatePickerDialog.OnDateSetListener toDatePickerListener
+			= new DatePickerDialog.OnDateSetListener() {
+		public void onDateSet(DatePicker view, int selectedYear,
+							  int selectedMonth, int selectedDay) {
+			year = selectedYear;
+			month = selectedMonth;
+			day = selectedDay;
+
+			// set selected date into textview
+			Button toDateBtn = (Button) searchView.findViewById(R.id.todateButton);
+
+			selectedDate = new StringBuilder().append(month + 1)
+					.append("-").append(day).append("-").append(year)
+					.append(" ");
+			toDateBtn.setText(selectedDate.toString());
+		}
+	};
 	
 	/*private TableLayout createTableLayout(Cursor resultCursor) {
 		ScrollView resultsView = (ScrollView)searchView.findViewById(R.id.results_table);

@@ -59,7 +59,8 @@
             android:textColor="#9b9b9b"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
+            android:layout_marginRight="5dp"
+            android:singleLine="true">
         </EditText>
 
         <EditText
@@ -78,7 +79,8 @@
             android:textColor="#9b9b9b"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/userId"
@@ -95,7 +97,8 @@
             android:textColor="#9b9b9b"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:singleLine="true"/>
 
 
         <EditText
@@ -114,7 +117,8 @@
             android:textColor="#9b9b9b"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:singleLine="true"/>
 
 
 
@@ -134,7 +138,8 @@
             android:textColor="#9b9b9b"
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:singleLine="true"/>
 
 
         <Button

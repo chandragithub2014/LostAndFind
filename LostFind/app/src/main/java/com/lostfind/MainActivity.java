@@ -20,15 +20,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        /*mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.setTitle("Login");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         MyApplication.getInstance().setActivity(MainActivity.this);
         LayoutInflater mInflater= LayoutInflater.from(getApplicationContext());
         View mCustomView = mInflater.inflate(R.layout.toolbar_custom_view, null);
-        mToolbar.addView(mCustomView);
-
+        mToolbar.addView(mCustomView);*/
+        MyApplication.getInstance().setActivity(MainActivity.this);
 
         getFragmentManager().beginTransaction()
                 .replace(R.id.loginparentLayout,  SplashScreenFragment.newInstance("", ""))
