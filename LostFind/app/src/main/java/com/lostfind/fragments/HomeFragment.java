@@ -1,22 +1,26 @@
 package com.lostfind.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.lostfind.R;
+import com.lostfind.slidingmenu.SlidingMenuActivity;
+import com.lostfind.utils.BikeConstants;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,6 +31,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
 View homeView;
+    Button lost_btn,find_btn;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -66,7 +71,33 @@ View homeView;
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
         toolBarTitle.setText("SiiK");
+        lost_btn = (Button)homeView.findViewById(R.id.lost_btn);
+        find_btn = (Button)homeView.findViewById(R.id.find_btn);
+
+        lost_btn.setOnClickListener(this);
+        find_btn.setOnClickListener(this);
         return  homeView;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.lost_btn:
+                laucnchSlidingMenu(BikeConstants.SLIDING_MENU_REPORT_LOSS);
+                break;
+            case R.id.find_btn:
+                laucnchSlidingMenu(BikeConstants.SLIDING_MENU_REPORT_FIND);
+                break;
+        }
+    }
+
+
+    private void laucnchSlidingMenu(int position){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",position);
+        i.putExtras(bundle);
+        startActivity(i);
+        getActivity().finish();
+    }
 }

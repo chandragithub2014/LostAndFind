@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+
+
+android:weightSum="3"
+    android:orientation="horizontal">
+    <CheckBox
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+       android:textAllCaps="false"
+
+        android:text="Lost"
+        android:id="@+id/lost_check"
+
+
+        android:paddingRight="5dp"/>
+
+    <CheckBox
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:textAllCaps="false"
+        android:text="Found"
+        android:id="@+id/found_check"
+
+        android:paddingRight="5dp"
+        />
+
+
+    <ImageView
+        android:id="@+id/search_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/category"
+         android:src="@drawable/ic_search"
+        android:scaleType="centerInside"
+
+
+        />
+
+</LinearLayout>

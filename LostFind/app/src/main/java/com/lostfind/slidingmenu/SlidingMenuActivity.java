@@ -50,7 +50,7 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
         if(getIntent().getExtras()!=null) {
             Bundle bundle = getIntent().getExtras();
             defaultPostion = bundle.getInt("position");
-            Toast.makeText(getApplicationContext(),"DefaultPosition::::"+defaultPostion,Toast.LENGTH_LONG).show();
+      //      Toast.makeText(getApplicationContext(),"DefaultPosition::::"+defaultPostion,Toast.LENGTH_LONG).show();
         }
 
 /*
@@ -179,7 +179,7 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
             case 2:
 
 
-            case 3:
+
 
 
               /*  Fragment fff = new SearchFragment();
@@ -188,10 +188,25 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                         .replace(R.id.mapparentLayout,fff)
                         .commit();*/
                 Bundle args = new Bundle();
-                Fragment reportLossFrag = new ReportLossFragment();
+                Fragment reportLossFrag = new ReportLossFragment().newInstance(true,"");
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,reportLossFrag)
+                        .commit();
+                break;
+            case 3:
+
+
+              /*  Fragment fff = new SearchFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,fff)
+                        .commit();*/
+              //  Bundle args = new Bundle();
+                Fragment reportFindFrag = new ReportLossFragment().newInstance(false,"");
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,reportFindFrag)
                         .commit();
                 break;
 

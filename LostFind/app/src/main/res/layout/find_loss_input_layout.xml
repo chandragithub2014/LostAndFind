@@ -17,15 +17,23 @@
     android:id="@+id/find_loss_desc"
     android:layout_marginTop="10dp"
     android:paddingLeft="5dp"
+    android:singleLine="true"
+
 
    />
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description: Eg:Computer,mobiles Etc.)"
+        android:hint="Category"
+        android:gravity="center_vertical"
+
         android:background="@drawable/edittextnewstyle"
         android:id="@+id/find_loss_selector"
         android:layout_marginTop="5dp"
+        android:drawableRight="@drawable/ic_down_arrow"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
         android:paddingLeft="5dp"/>
 
 
@@ -41,19 +49,20 @@
         android:background="@drawable/edittextnewstyle"
         android:layout_marginTop="5dp"
         android:paddingLeft="5dp"
+        android:drawableRight="@drawable/ic_map"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"
         >
         <requestFocus />
     </AutoCompleteTextView>
 
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Select Date"
-        android:background="@drawable/edittextnewstyle"
-        android:id="@+id/find_loss_date"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="5dp"/>
+
+
+    <include
+        layout="@layout/to_from_date_picker_layout"
+        android:id="@+id/to_from_date"
+        ></include>
 
     <EditText
     android:inputType="textMultiLine"
@@ -78,17 +87,20 @@
         android:background="@drawable/edittextnewstyle"
         android:id="@+id/find_loss_reward_option"
         android:layout_marginTop="10dp"
+        android:singleLine="true"
         android:paddingLeft="5dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:id="@+id/find_loss_report"
         android:layout_marginTop="10dp"
         android:text="Report"
+        android:gravity="center"
         android:background="@drawable/buttonshape"
         android:layout_marginRight="5dp"
+        android:singleLine="true"
         android:layout_gravity="right|bottom" />
 
 </LinearLayout>

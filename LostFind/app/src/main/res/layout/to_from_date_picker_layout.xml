@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+
+
+android:weightSum="2"
+    android:orientation="horizontal">
+    <Button
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+         android:layout_weight="1"
+       android:textAllCaps="false"
+        android:background="@drawable/edittextnewstyle"
+        android:text="From Date"
+        android:id="@+id/from_date"
+        android:drawableRight="@drawable/ic_calender"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:textAllCaps="false"
+        android:text="To Date"
+        android:id="@+id/to_date"
+        android:drawableRight="@drawable/ic_calender"
+        android:drawablePadding="5dp"
+        android:background="@drawable/edittextnewstyle"
+        android:paddingRight="5dp"
+        />
+
+</LinearLayout>

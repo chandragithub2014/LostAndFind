@@ -49,6 +49,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -81,6 +82,8 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
     private RecyclerView.LayoutManager mLayoutManager;
     Button category;
     String[] categoryNames;
+    CheckBox lost_check,found_check;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,18 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
         toolBarTitle.setText("Report History");
         categoryNames = getResources().getStringArray(R.array.array_name);
+
+        LinearLayout check_search_Layout = (LinearLayout)searchView.findViewById(R.id.checkbox_layout);
+        lost_check  = (CheckBox)check_search_Layout.findViewById(R.id.lost_check);
+        found_check = (CheckBox)check_search_Layout.findViewById(R.id.found_check);
+        ImageView submit = (ImageView) check_search_Layout.findViewById(R.id.search_btn);
+        initRecyclerView();
+        submit.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchResultsList();
+            }
+        });
         /*category = (Button) searchView
                 .findViewById(R.id.category);
         category.setOnClickListener(this);*/
@@ -109,7 +124,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
 
 
 
-     //   ImageView submit = (ImageView) searchView.findViewById(R.id.search_btn);
+     //
        /* final Calendar c = Calendar
                 .getInstance();
         final Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
@@ -147,8 +162,8 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
             }
         });*/
 
-        initRecyclerView();
-        launchResultsList();
+
+
 
         return searchView;
     }

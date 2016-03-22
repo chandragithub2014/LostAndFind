@@ -112,12 +112,22 @@
          />
     </RelativeLayout>-->
 
+    <include
+        layout="@layout/checkbox_with_search_layout"
+        android:id="@+id/checkbox_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        ></include>
+
         <include
             android:id="@+id/results_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/searchresults"
-            android:layout_below="@+id/relativeLayout1"
+            android:layout_below="@+id/checkbox_layout"
             ></include>
 
 

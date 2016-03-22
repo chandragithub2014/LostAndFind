@@ -81,6 +81,7 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
     private RecyclerView.LayoutManager mLayoutManager;
      Button category;
     String[] categoryNames;
+	Button toDateBtn,fromDateBtn;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -109,11 +110,13 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 
 
 
-		ImageView submit = (ImageView) searchView.findViewById(R.id.search_btn);
+
 		final Calendar c = Calendar
-					.getInstance();	
-		final Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
-		final Button toDateBtn = (Button) searchView.findViewById(R.id.todateButton);
+					.getInstance();
+		LinearLayout dateLayout = (LinearLayout)searchView.findViewById(R.id.to_from_date);
+		fromDateBtn = (Button) dateLayout.findViewById(R.id.from_date);
+		 toDateBtn = (Button) dateLayout.findViewById(R.id.to_date);
+        ImageView submit = (ImageView) dateLayout.findViewById(R.id.search_btn);
 
 		toDateBtn.setOnClickListener(new OnClickListener() {
 
@@ -131,7 +134,7 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 			}
 		});
 
-		dateBtn.setOnClickListener(new OnClickListener() {
+		fromDateBtn.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -216,12 +219,12 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 			day = selectedDay;
 
 			// set selected date into textview
-			Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
+		//	Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
 			
 			selectedDate = new StringBuilder().append(month + 1)
 					   .append("-").append(day).append("-").append(year)
 					   .append(" ");
-			dateBtn.setText(selectedDate.toString());
+			fromDateBtn.setText(selectedDate.toString());
 		}
 	};
 
@@ -235,7 +238,6 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 			day = selectedDay;
 
 			// set selected date into textview
-			Button toDateBtn = (Button) searchView.findViewById(R.id.todateButton);
 
 			selectedDate = new StringBuilder().append(month + 1)
 					.append("-").append(day).append("-").append(year)

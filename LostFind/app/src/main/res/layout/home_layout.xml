@@ -11,7 +11,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"
+            android:text=""
             android:id = "@+id/resultView"
             android:layout_margin="16dp"
             android:fontFamily="sans-serif"
@@ -20,35 +20,40 @@
             android:textSize="20sp"
             android:textColor="#000000"/>
     </ScrollView>
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:id="@+id/footer"
-    android:layout_margin="10dp">
+    android:layout_margin="16dp"
+    android:orientation="horizontal"
+    android:weightSum="2">
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_weight="1"
+        android:id="@+id/lost_btn"
         android:background="@drawable/buttonshape"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
         android:textSize="25sp"
         android:textColor="#ffffff"
-        android:text="Home1"/>
+        android:text="Lost"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/buttonshape"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="1"
+        android:id="@+id/find_btn"
+       android:background="@drawable/buttonshape"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
         android:textSize="25sp"
         android:textColor="#ffffff"
-        android:text="Home2"/>
+        android:text="Found"/>
 
 
-</RelativeLayout>
+</LinearLayout>
 
 </RelativeLayout>

@@ -32,6 +32,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -70,7 +71,7 @@ public class ReportLossFragment extends Fragment implements View.OnClickListener
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private boolean mParam1;
     private String mParam2;
 
     Button spinnerType;
@@ -96,6 +97,8 @@ private String imageUrl="";
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
     private static final String API_KEY = "AIzaSyDixji8saFmpOFmSnKXY6-uP_2mnDYG3Js";
+    Button fromDate,toDate;
+    boolean isFromDateSet,isToDateSet;
 
     public ReportLossFragment() {
         // Required empty public constructor
@@ -105,15 +108,15 @@ private String imageUrl="";
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param isReportLoss Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment ReportLossFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ReportLossFragment newInstance(String param1, String param2) {
+    public static ReportLossFragment newInstance(boolean isReportLoss, String param2) {
         ReportLossFragment fragment = new ReportLossFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putBoolean(ARG_PARAM1, isReportLoss);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -123,7 +126,7 @@ private String imageUrl="";
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getBoolean(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -154,8 +157,12 @@ private String imageUrl="";
         spinnerType.setOnClickListener(this);
         location_spinner = (AutoCompleteTextView)inputScrollView.findViewById(R.id.find_loss_location);
         location_spinner.setOnClickListener(this);
-        date_btn  = (Button)inputScrollView.findViewById(R.id.find_loss_date);
-        date_btn.setOnClickListener(this);
+        LinearLayout dateLayout = (LinearLayout)inputScrollView.findViewById(R.id.to_from_date);
+        fromDate  = (Button)dateLayout.findViewById(R.id.from_date);
+        toDate = (Button)dateLayout.findViewById(R.id.to_date);
+      //  date_btn  = (Button)inputScrollView.findViewById(R.id.find_loss_date);
+        fromDate.setOnClickListener(this);
+        toDate.setOnClickListener(this);
         additionalInfo = (EditText)inputScrollView.findViewById(R.id.additional_info);
         rewardOption = (EditText)inputScrollView.findViewById(R.id.find_loss_reward_option);
         Button loss_report_btn = (Button)inputScrollView.findViewById(R.id.find_loss_report);
@@ -180,7 +187,7 @@ private String imageUrl="";
            /* case R.id.find_loss_location:
                 launchLocationSelector();
                 break;*/
-            case R.id.find_loss_date:
+            case R.id.from_date:
            //     getActivity().showDialog(DATE_PICKER_ID);
                 final Calendar c = Calendar
                         .getInstance();
@@ -199,8 +206,30 @@ private String imageUrl="";
                 myAlert.show();
 
                 break;
+            case R.id.to_date:
+                final Calendar toC = Calendar
+                        .getInstance();
+
+                int toyear =  toC.get(Calendar.YEAR);
+                int tomonth =  toC.get(Calendar.MONTH);
+                int today =   toC.get(Calendar.DAY_OF_MONTH);
+                myAlert = new DatePickerDialog(
+                        getActivity(),
+                        toDateSetListener,
+                        toyear,
+                        tomonth,
+                        today);
+                //    setDatePicker();
+
+                myAlert.show();
+                break;
             case R.id.find_loss_report:
-                popualteDateInDB();
+if(isFromDateSet) {
+    popualteDateInDB();
+}
+                else{
+    Toast.makeText(getActivity(),"Set From Date To Proceed",Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.footer_img_btn:
                 laucnchSlidingMenu();
@@ -281,8 +310,63 @@ private String imageUrl="";
                     .append(mYear)
                     .append(" ").toString();
 
-            date_btn
+            fromDate
                     .setText(inputFomat_val);
+            isFromDateSet =  true;
+
+
+
+        }
+
+    };
+
+    private DatePickerDialog.OnDateSetListener toDateSetListener = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(
+                DatePicker arg0,
+                int year,
+                int monthofyear,
+                int dayOfMonth) {
+            String monthString;
+            String dayString;
+            int mYear = year;
+            if (monthofyear + 1 < 10) {
+                monthString = "0"
+                        + (monthofyear+1);
+            } else {
+                monthString = ""
+                        + (monthofyear + 1);
+            }
+            if (dayOfMonth < 10) {
+                dayString = "0"
+                        + dayOfMonth;
+            } else {
+                dayString = ""
+                        + dayOfMonth;
+            }
+
+
+
+
+            String inputFomat_val = new StringBuilder()
+                    // Month
+                    // is
+                    // 0
+                    // based
+                    // so
+                    // addj
+                    // 1
+                    .append(monthString)
+                    .append("-")
+                    .append(dayString)
+                    .append("-")
+                    .append(mYear)
+                    .append(" ").toString();
+
+            toDate
+                    .setText(inputFomat_val);
+            isToDateSet =  true;
 
 
 
