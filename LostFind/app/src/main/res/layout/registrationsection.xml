@@ -50,6 +50,7 @@
         android:layout_gravity="center_vertical"
         android:id="@+id/gplus"
         android:background="@drawable/ic_gplus"
+
         />
 
 

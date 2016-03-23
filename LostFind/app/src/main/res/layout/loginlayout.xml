@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:layout_marginTop="25dp"
+   android:layout_marginTop="15dp"
     android:weightSum="80"
     android:background="@drawable/transparentshape"
     android:id="@+id/loginview"
@@ -40,7 +40,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/edittextnewstyle"
-            android:paddingLeft="3dp"
+            android:paddingLeft="6dp"
             />
 
         <EditText
@@ -57,7 +57,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/edittextnewstyle"
             android:inputType="textPassword"
-            android:paddingLeft="3dp"
+            android:paddingLeft="6dp"
             />
         <Button
             android:layout_width="match_parent"

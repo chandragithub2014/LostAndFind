@@ -99,7 +99,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
 
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
-        toolBarTitle.setText("Report History");
+        toolBarTitle.setText("Your History");
         categoryNames = getResources().getStringArray(R.array.array_name);
 
         LinearLayout check_search_Layout = (LinearLayout)searchView.findViewById(R.id.checkbox_layout);

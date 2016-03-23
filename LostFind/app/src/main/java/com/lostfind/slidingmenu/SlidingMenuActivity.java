@@ -1,5 +1,6 @@
 package com.lostfind.slidingmenu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
     private FragmentDrawer drawerFragment;
     int defaultPostion = 0;
     String currentLocation = "";
+    android.support.v4.widget.DrawerLayout slidingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,12 +68,22 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
         sharedPreferencesUtils = new SharedPreferencesUtils();
         initializeSlidingMenu();
         displayView(defaultPostion);
+
         /*getFragmentManager().beginTransaction()
                 .replace(R.id.mapparentLayout, new BikePoolerMapFragment())
                 .commit();*/
     }
 
-
+    /**
+     * Hides virtual keyboard
+     *
+     * @author chandra
+     */
+    protected void hideKeyboard(View view)
+    {
+        InputMethodManager in = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
     public void initializeSlidingMenu(){
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -105,14 +119,19 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
 
+
+
+
         // display the first navigation drawer view on app launch
 
     }
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
+        hideKeyboard(view);
         displayView(position);
     }
+
 
     private void displayView(int position) {
         switch (position) {

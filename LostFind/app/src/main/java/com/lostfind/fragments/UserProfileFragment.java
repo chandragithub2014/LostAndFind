@@ -3,6 +3,8 @@ package com.lostfind.fragments;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -21,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
@@ -30,61 +33,70 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class UserProfileFragment extends Fragment implements  OnClickListener{
-	private int PICK_IMAGE_REQUEST = 1;
-	private View userProfileView;
-	SharedPreferencesUtils sharedPreferencesUtils;
+    private int PICK_IMAGE_REQUEST = 1;
+    private int PICK_CAMERA_REQUEST = 2;
+    private View userProfileView;
+    SharedPreferencesUtils sharedPreferencesUtils;
     EditText firstName,lastName,emailId,phoneNumber,userId;
     Button submit;
     private boolean isViewEnabled = false;
+    String[] itemNames;
+    Button changeImage;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sharedPreferencesUtils = new SharedPreferencesUtils();
+        itemNames = getResources().getStringArray(R.array.array_gallery_camera);
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		sharedPreferencesUtils = new SharedPreferencesUtils();
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		userProfileView = inflater.inflate(R.layout.ly_user_profile, container,
-				false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        userProfileView = inflater.inflate(R.layout.ly_user_profile, container,
+                false);
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
         toolBarTitle.setText("SiiK");
-		 firstName = (EditText) userProfileView
-				.findViewById(R.id.firstName);
-		 lastName = (EditText) userProfileView
-				.findViewById(R.id.lastName);
-		 emailId = (EditText) userProfileView
+        firstName = (EditText) userProfileView
+                .findViewById(R.id.firstName);
+        lastName = (EditText) userProfileView
+                .findViewById(R.id.lastName);
+        emailId = (EditText) userProfileView
 
 
-				.findViewById(R.id.emailId);
-		 phoneNumber = (EditText) userProfileView
-				.findViewById(R.id.phoneNumber);
-		 userId = (EditText) userProfileView.findViewById(R.id.userId);
+                .findViewById(R.id.emailId);
+        phoneNumber = (EditText) userProfileView
+                .findViewById(R.id.phoneNumber);
+        userId = (EditText) userProfileView.findViewById(R.id.userId);
 
-		Button changeImage = (Button) userProfileView
-				.findViewById(R.id.change_image);
-		 submit = (Button) userProfileView.findViewById(R.id.save_btn);
+        changeImage = (Button) userProfileView
+                .findViewById(R.id.change_image);
+        submit = (Button) userProfileView.findViewById(R.id.save_btn);
         submit.setOnClickListener(this);
         disableView();
         prepopulateDataIfExists();
-		ImageButton	footerImage_btn = (ImageButton)userProfileView.findViewById(R.id.footer_img_btn);
-		footerImage_btn.setOnClickListener(this);
-
-		changeImage.setOnClickListener(new OnClickListener() {
+        ImageButton	footerImage_btn = (ImageButton)userProfileView.findViewById(R.id.footer_img_btn);
+        footerImage_btn.setOnClickListener(this);
+        changeImage.setOnClickListener(this);
+      /*  changeImage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                intent.setType("image/*");
+                intent.setType("image*//**//*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(
                         Intent.createChooser(intent, "Select Picture"),
                         PICK_IMAGE_REQUEST);
+
+
+                //   launchSelector();
+              *//*  Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, PICK_CAMERA_REQUEST);*//*
+
             }
-        });
+        });*/
 
         String userProfilePhoneNum = "";
         if(!TextUtils.isEmpty(sharedPreferencesUtils.getStringPreferences(getActivity(),"PhoneNumber"))){
@@ -152,18 +164,18 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
 
 
 		/* Hard coded Data */
-	//	firstName.setText("Praveen");
-	//	lastName.setText("");
-	//	emailId.setText("praveen.kumar@gmail.com");
-	//	phoneNumber.setText("+11003333");
-	//	userId.setText("");
+        //	firstName.setText("Praveen");
+        //	lastName.setText("");
+        //	emailId.setText("praveen.kumar@gmail.com");
+        //	phoneNumber.setText("+11003333");
+        //	userId.setText("");
 
 
-		return userProfileView;
-	}
+        return userProfileView;
+    }
 
     private void disableView(){
-   //     firstName,lastName,emailId,phoneNumber,userId
+        //     firstName,lastName,emailId,phoneNumber,userId
         firstName.setEnabled(false);
         lastName.setEnabled(false);
         emailId.setEnabled(false);
@@ -197,46 +209,84 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
     }
 
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == PICK_IMAGE_REQUEST
-				&& resultCode == Activity.RESULT_OK && data != null
-				&& data.getData() != null) {
-			Uri uri = data.getData();
-			try {
-				Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
-						.getContentResolver(), uri);
-				ImageView imageView = (ImageView) userProfileView
-						.findViewById(R.id.user_image);
-				imageView.setImageBitmap(bitmap);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("TAG", "requestCode::" + requestCode);
+        if (requestCode == PICK_IMAGE_REQUEST
+                && resultCode == Activity.RESULT_OK && data != null
+                && data.getData() != null) {
+            Uri uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
+                        .getContentResolver(), uri);
+                ImageView imageView = (ImageView) userProfileView
+                        .findViewById(R.id.user_image);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if (requestCode == PICK_CAMERA_REQUEST
+                && resultCode == Activity.RESULT_OK && data != null
+                && data.getData() != null) {
+            Bitmap bp = (Bitmap) data.getExtras().get("data");
+            ImageView imageView = (ImageView) userProfileView
+                    .findViewById(R.id.user_image);
+            imageView.setImageBitmap(bp);
 
-	private void laucnchSlidingMenu(){
-		Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putInt("position",4);
-		i.putExtras(bundle);
-		startActivity(i);
-		getActivity().finish();
-	}
+        }
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()){
-			case R.id.footer_img_btn:
-				laucnchSlidingMenu();
-				break;
+    private void laucnchSlidingMenu(){
+        Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("position",4);
+        i.putExtras(bundle);
+        startActivity(i);
+        getActivity().finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.footer_img_btn:
+                laucnchSlidingMenu();
+                break;
             case R.id.save_btn:
                 performButtonAction();
                 break;
-		}
-	}
+            case R.id.change_image:
+                launchSelector();
+                break;
+        }
+    }
 
+    private void launchSelector(){
+       /* InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);*/
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Make your selection");
+        builder.setItems(R.array.array_gallery_camera, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                // Do something with the selection
+                if(itemNames[item].equalsIgnoreCase("Gallery")){
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select Picture"),
+                            PICK_IMAGE_REQUEST);
+                }else if(itemNames[item].equalsIgnoreCase("Camera")){
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, PICK_CAMERA_REQUEST);
+                }
+                //     changeImage.setText(itemNames[item]);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
 
     private void performButtonAction(){
         if(!isViewEnabled){
@@ -244,6 +294,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
             isViewEnabled = true;
         }else{
             createAndSaveProfileObject();
+            Toast.makeText(getActivity(),"Profile Updated",Toast.LENGTH_LONG).show();
             disableView();
         }
     }
@@ -257,29 +308,29 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
 
         String loginType = sharedPreferencesUtils.getStringPreferences(getActivity(), "loginType");
 
-              try {
-                  JSONObject profileJson = new JSONObject();
-                  profileJson.put("firstName",userProfileFirstName);
-                  profileJson.put("lastName",userProfileLastName);
-                  profileJson.put("email", userProfileEmail);
-                  profileJson.put("phone", userPhoneNum);
-                  profileJson.put("userid",userProfileUserId);
-                  JSONObject finalJSON = new JSONObject();
-                   Log.d("TAG", "FinalJSON:::" + finalJSON.toString());
-                  if(loginType.equalsIgnoreCase("facebookprofile")){
-                      sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileFaceBook",profileJson.toString());
-                  }else if(loginType.equalsIgnoreCase("googleprofile")){
-                      sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileGoogle",profileJson.toString());
-                  }else if(loginType.equalsIgnoreCase("emailProfile")){
-                      sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileEmail",profileJson.toString());
-                  }
+        try {
+            JSONObject profileJson = new JSONObject();
+            profileJson.put("firstName",userProfileFirstName);
+            profileJson.put("lastName",userProfileLastName);
+            profileJson.put("email", userProfileEmail);
+            profileJson.put("phone", userPhoneNum);
+            profileJson.put("userid",userProfileUserId);
+            JSONObject finalJSON = new JSONObject();
+            Log.d("TAG", "FinalJSON:::" + finalJSON.toString());
+            if(loginType.equalsIgnoreCase("facebookprofile")){
+                sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileFaceBook",profileJson.toString());
+            }else if(loginType.equalsIgnoreCase("googleprofile")){
+                sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileGoogle",profileJson.toString());
+            }else if(loginType.equalsIgnoreCase("emailProfile")){
+                sharedPreferencesUtils.saveStringPreferences(getActivity(),"userProfileEmail",profileJson.toString());
+            }
 
-              }catch (JSONException ej){
-                  ej.printStackTrace();
-              }
-              catch (Exception e){
-                  e.printStackTrace();
-              }
+        }catch (JSONException ej){
+            ej.printStackTrace();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
         //facebookprofile

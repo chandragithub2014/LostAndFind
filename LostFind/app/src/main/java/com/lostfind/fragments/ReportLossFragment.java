@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -33,6 +34,7 @@ import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -99,6 +101,9 @@ private String imageUrl="";
     private static final String API_KEY = "AIzaSyDixji8saFmpOFmSnKXY6-uP_2mnDYG3Js";
     Button fromDate,toDate;
     boolean isFromDateSet,isToDateSet;
+    RelativeLayout root_layout;
+    String[] cameraGalleryitemNames;
+    private int PICK_CAMERA_REQUEST = 2;
 
     public ReportLossFragment() {
         // Required empty public constructor
@@ -129,7 +134,10 @@ private String imageUrl="";
             mParam1 = getArguments().getBoolean(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        cameraGalleryitemNames = getResources().getStringArray(R.array.array_gallery_camera);
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,12 +153,32 @@ private String imageUrl="";
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         footerImage_btn = (ImageButton)view.findViewById(R.id.footer_img_btn);
         footerImage_btn.setOnClickListener(this);
+        root_layout = (RelativeLayout)view.findViewById(R.id.root_layout);
+        root_layout.setOnTouchListener(new View.OnTouchListener()
+        {
+            @Override
+            public boolean onTouch(View view, MotionEvent ev)
+            {
+                hideKeyboard(view);
+                return false;
+            }
+        });
         initInputFieldView(view);
         return view;
     }
-
+    /**
+     * Hides virtual keyboard
+     *
+     * @author chandra
+     */
+    protected void hideKeyboard(View view)
+    {
+        InputMethodManager in = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        in.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+    }
 
     private void initInputFieldView(View v){
+
         ScrollView inputScrollView = (ScrollView)v.findViewById(R.id.find_loss_input);
          spinnerType = (Button)inputScrollView.findViewById(R.id.find_loss_selector);
         description = (EditText)inputScrollView.findViewById(R.id.find_loss_desc);
@@ -188,6 +216,7 @@ private String imageUrl="";
                 launchLocationSelector();
                 break;*/
             case R.id.from_date:
+                hideKeyboard(v);
            //     getActivity().showDialog(DATE_PICKER_ID);
                 final Calendar c = Calendar
                         .getInstance();
@@ -207,6 +236,7 @@ private String imageUrl="";
 
                 break;
             case R.id.to_date:
+                hideKeyboard(v);
                 final Calendar toC = Calendar
                         .getInstance();
 
@@ -224,27 +254,55 @@ private String imageUrl="";
                 myAlert.show();
                 break;
             case R.id.find_loss_report:
+                Log.d(TAG,"Desc:::"+description.getText().toString());
 if(isFromDateSet) {
     popualteDateInDB();
 }
-                else{
-    Toast.makeText(getActivity(),"Set From Date To Proceed",Toast.LENGTH_LONG).show();
+                else  if(TextUtils.isEmpty(description.getText().toString()) || TextUtils.isEmpty(spinnerType.getText().toString())|| TextUtils.isEmpty(location_spinner.getText().toString())){
+    Toast.makeText(getActivity(),"Fill All fields to Report",Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.footer_img_btn:
                 laucnchSlidingMenu();
                 break;
             case R.id.chng_btn:
-                Intent intent = new Intent();
-                intent.setType("image/*");
+                /*Intent intent = new Intent();
+                intent.setType("image*//*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(
                         Intent.createChooser(intent, "Select Picture"),
-                        PICK_IMAGE_REQUEST);
+                        PICK_IMAGE_REQUEST);*/
+                launchCameraGallerySelector();
                 break;
         }
     }
 
+    private void launchCameraGallerySelector(){
+       /* InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getActivity().getWindow().getCurrentFocus().getWindowToken(), 0);*/
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Make your selection");
+        builder.setItems(R.array.array_gallery_camera, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                // Do something with the selection
+                if(cameraGalleryitemNames[item].equalsIgnoreCase("Gallery")){
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select Picture"),
+                            PICK_IMAGE_REQUEST);
+                }else if(cameraGalleryitemNames[item].equalsIgnoreCase("Camera")){
+                    Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, PICK_CAMERA_REQUEST);
+                }
+                //     changeImage.setText(itemNames[item]);
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -263,6 +321,14 @@ if(isFromDateSet) {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if (requestCode == PICK_CAMERA_REQUEST
+                && resultCode == Activity.RESULT_OK && data != null
+                && data.getData() != null) {
+            Bitmap bp = (Bitmap) data.getExtras().get("data");
+            ImageView imageView = (ImageView) view
+                    .findViewById(R.id.iv_upload);
+            imageView.setImageBitmap(bp);
+
         }
     }
 
@@ -441,8 +507,8 @@ private void popualteDateInDB(){
         cv.put("location","");
     }
 
-    if(!TextUtils.isEmpty(date_btn.getText().toString())){
-        cv.put("date",date_btn.getText().toString());
+    if(!TextUtils.isEmpty(toDate.getText().toString())){
+        cv.put("date",toDate.getText().toString());
     }else{
         cv.put("date","");
     }
@@ -586,4 +652,5 @@ private void popualteDateInDB(){
             return filter;
         }
     }
+
 }

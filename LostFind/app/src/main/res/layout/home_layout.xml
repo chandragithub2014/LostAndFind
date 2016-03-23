@@ -36,7 +36,7 @@
         android:background="@drawable/buttonshape"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
-        android:textSize="25sp"
+        android:textSize="18sp"
         android:textColor="#ffffff"
         android:text="Lost"/>
 
@@ -49,7 +49,7 @@
        android:background="@drawable/buttonshape"
         android:fontFamily="sans-serif"
         android:textStyle="normal"
-        android:textSize="25sp"
+        android:textSize="18sp"
         android:textColor="#ffffff"
         android:text="Found"/>
 

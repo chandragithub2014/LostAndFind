@@ -22,7 +22,7 @@
         android:layout_marginBottom="25dp"
         android:layout_alignBottom="@+id/lost_item"
         android:layout_centerHorizontal="true"
-        android:textColor="#cbcac8"
+        android:textColor="#ffffff"
         android:fontFamily="sans-serif-light"
         android:textStyle="normal"
         android:textSize="18sp"/>
@@ -38,7 +38,7 @@
         android:layout_alignTop="@+id/desc"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textColor="#cbcac8"
+        android:textColor="#ffffff"
         android:fontFamily="sans-serif-light"
         android:textStyle="normal"
         android:textSize="18sp"/>
