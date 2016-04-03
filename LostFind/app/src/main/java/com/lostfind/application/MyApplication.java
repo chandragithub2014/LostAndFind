@@ -26,6 +26,9 @@ public class MyApplication extends Application {
     AppCompatActivity activity;
     GoogleApiClient mGoogleAPIClient;
     private SQLiteDatabase configDB;
+    private  String registrationResponseMessage;
+    private String userIDForEmail;
+    private String searchResponse;
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
   /*  private static final String TWITTER_KEY = "LEZjsy3ZQwyscBjvLdaz7bNgv";
     private static final String TWITTER_SECRET = "CTsRGP431ghMRSeeDadFxn5usbh4exlmD7qQMINch258Cb3JX9";*/
@@ -88,6 +91,30 @@ public class MyApplication extends Application {
 
     public void setConfigDB(SQLiteDatabase configDB) {
         this.configDB = configDB;
+    }
+
+    public String getRegistrationResponseMessage() {
+        return registrationResponseMessage;
+    }
+
+    public void setRegistrationResponseMessage(String registrationResponseMessage) {
+        this.registrationResponseMessage = registrationResponseMessage;
+    }
+
+    public String getUserIDForEmail() {
+        return userIDForEmail;
+    }
+
+    public void setUserIDForEmail(String userIDForEmail) {
+        this.userIDForEmail = userIDForEmail;
+    }
+
+    public String getSearchResponse() {
+        return searchResponse;
+    }
+
+    public void setSearchResponse(String searchResponse) {
+        this.searchResponse = searchResponse;
     }
 }
 

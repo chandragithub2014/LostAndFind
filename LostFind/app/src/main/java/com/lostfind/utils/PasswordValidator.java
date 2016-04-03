@@ -11,7 +11,7 @@ public class PasswordValidator {
     private Matcher matcher;
 
     private static final String PASSWORD_PATTERN =
-            "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+            "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{8,20})";
 
 
     public PasswordValidator(){

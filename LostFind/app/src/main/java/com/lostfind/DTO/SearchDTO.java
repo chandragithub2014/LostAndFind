@@ -10,6 +10,17 @@ public class SearchDTO {
     private String itemDescription;
     private String itemId;
 
+    public SearchDTO(){
+
+    }
+    public SearchDTO(String imageURL,String itemDescription,String status,String itemId,String category){
+        this.imageURL = imageURL;
+        this.itemDescription = itemDescription;
+        this.status  = status;
+        this.itemId = itemId;
+        this.category = category;
+
+    }
     public String getImageURL() {
         return imageURL;
     }

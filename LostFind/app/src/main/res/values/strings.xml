@@ -58,4 +58,30 @@
     <string name="location_prompt">Location</string>
     <string name="category_prompt">Category</string>
 
+    <string-array name="communities">
+        <item>Android</item>
+        <item>Airtel</item>
+        <item>Avon</item>
+        <item>Aris</item>
+        <item>Andy</item>
+        <item>Bayclub</item>
+        <item>Bay Area</item>
+        <item>Bay Road</item>
+        <item>Citrus</item>
+        <item>Civic</item>
+        <item>Yellowstone</item>
+        <item>Grand Canyon</item>
+        <item> San Francisco</item>
+        <item> Yosemite</item>
+        <item> Washington D.C.</item>
+        <item> New York City</item>
+        <item> Honolulu - Oahu</item>
+        <item> San Diego</item>
+        <item> Orlando-Walt Disney World</item>
+        <item> Disney World</item>
+        <item>Charleston</item>
+        <item> Jackson Hole</item>
+        <item> Cape Cod</item>
+    </string-array>
+
 </resources>

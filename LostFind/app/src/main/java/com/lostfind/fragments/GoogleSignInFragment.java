@@ -64,7 +64,7 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
+                .requestEmail().requestId().requestIdToken("99193507046-vphj6bfrh7bcu12h664kcds3h7v75bh8.apps.googleusercontent.com")
                 .build();
         // [END configure_signin]
 
@@ -148,6 +148,8 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.d(TAG, "DisplayName::::" + acct.getDisplayName());
             Log.d(TAG, "Email:::" + acct.getEmail());
+            Log.d(TAG,"Token::::"+acct.getIdToken());
+            Log.d(TAG,"Server Ath code::::"+acct.getServerAuthCode());
 
 
             JSONObject gmailJson = new JSONObject();

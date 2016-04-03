@@ -42,7 +42,12 @@ import android.widget.Toast;
 
 import com.lostfind.DBManager.SiikDBHelper;
 import com.lostfind.R;
+import com.lostfind.WebserviceHelpers.SiiKPostResponseHelper;
+import com.lostfind.WebserviceHelpers.SiiKPostUploadResponseHelper;
+import com.lostfind.application.MyApplication;
+import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
+import com.lostfind.utils.BikeConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +70,7 @@ import java.util.Locale;
  * Use the {@link ReportLossFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ReportLossFragment extends Fragment implements View.OnClickListener{
+public class ReportLossFragment extends Fragment implements View.OnClickListener,SiikReceiveListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG = "ReportLossFragment";
@@ -256,7 +261,12 @@ private String imageUrl="";
             case R.id.find_loss_report:
                 Log.d(TAG,"Desc:::"+description.getText().toString());
 if(isFromDateSet) {
-    popualteDateInDB();
+    formJSONPayLoad();
+  /*  if(BikeConstants.IS_WEB_SERVICE_ENABLED){
+        formJSONPayLoad();
+    }else {
+        popualteDateInDB();
+    }*/
 }
                 else  if(TextUtils.isEmpty(description.getText().toString()) || TextUtils.isEmpty(spinnerType.getText().toString())|| TextUtils.isEmpty(location_spinner.getText().toString())){
     Toast.makeText(getActivity(),"Fill All fields to Report",Toast.LENGTH_LONG).show();
@@ -318,6 +328,7 @@ if(isFromDateSet) {
                 imageView.setImageBitmap(bitmap);
       //          Toast.makeText(getActivity(),"URI::::"+uri,Toast.LENGTH_LONG).show();
                 imageUrl = ""+uri;
+                new SiiKPostUploadResponseHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -486,6 +497,43 @@ if(isFromDateSet) {
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
+    private void formJSONPayLoad(){
+
+        /*
+        description, category, location, info, type, imageurl
+         */
+        Log.d(TAG,"In makePostWebserviceCall()");
+        JSONObject reportLostFoundJson = new JSONObject();
+        try {
+            reportLostFoundJson.put("description", description.getText().toString());
+            reportLostFoundJson.put("location", location_spinner.getText().toString());
+            reportLostFoundJson.put("category", spinnerType.getText().toString());
+            reportLostFoundJson.put("info", additionalInfo.getText().toString());
+            if(mParam1){
+                reportLostFoundJson.put("type", "lost");
+            }else{
+                reportLostFoundJson.put("type", "found");
+            }
+
+           // reportLostFoundJson.put("imageurl", "");
+            if(!TextUtils.isEmpty(toDate.getText().toString())) {
+                reportLostFoundJson.put("to_date", toDate.getText().toString());
+            }else{
+                reportLostFoundJson.put("to_date", "");
+            }
+            reportLostFoundJson.put("from_date",fromDate.getText().toString());
+
+            makeWebServiceCall(reportLostFoundJson);
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void makeWebServiceCall(JSONObject jsonPayLoad){
+         new SiiKPostResponseHelper(getActivity(), ReportLossFragment.this,jsonPayLoad ,mParam1).execute(BikeConstants.REPORT_POST_SERVICE_URL);
+    }
 
 private void popualteDateInDB(){
     ContentValues cv = new ContentValues();
@@ -526,8 +574,8 @@ private void popualteDateInDB(){
     }else{
 
     }
-    cv.put("username","b.chandrasaimohan@gmail.com");
-    cv.put("imageurl",imageUrl);
+    cv.put("username","UserName"+System.currentTimeMillis());
+  //  cv.put("imageurl",imageUrl);
     try {
         int rowId = (Integer) new SiikDBHelper().insertSiiKData("lostorfound", cv);
         if(rowId != -1){
@@ -653,4 +701,18 @@ private void popualteDateInDB(){
         }
     }
 
+    @Override
+    public void receiveResult(String result) {
+        Log.d(TAG, "Received Result" + result);
+        if(result.equalsIgnoreCase("Success")){
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+            }
+          //  callSlidingMenu();
+        }else {
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }

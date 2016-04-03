@@ -21,13 +21,14 @@ public class SiiKGetJSONParser {
     public List<SearchDTO> getParseResponse(Context ctx,String response){
       List<SearchDTO> parsedList = new ArrayList<SearchDTO>();
       try{
-          JSONArray responseArray = new JSONArray(response);
+          JSONObject responseJSONObject = new JSONObject(response);
+          JSONArray responseArray = responseJSONObject.getJSONArray("items");
           for(int i=0;i<responseArray.length();i++){
               JSONObject responseJSON = responseArray.getJSONObject(i);
               SearchDTO temp = new SearchDTO();
-              temp.setItemId((String)responseJSON.get("id"));
+              temp.setItemId(""+responseJSON.get("id"));
               temp.setCategory((String) responseJSON.get("category"));
-              temp.setImageURL((String) responseJSON.get("imageurl"));
+              temp.setImageURL(""+responseJSON.get("imageurl"));
               temp.setItemDescription((String) responseJSON.get("description"));
               temp.setStatus((String) responseJSON.get("type"));
               parsedList.add(temp);

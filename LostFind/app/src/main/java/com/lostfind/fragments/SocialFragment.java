@@ -46,8 +46,10 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import com.lostfind.R;
+import com.lostfind.WebserviceHelpers.SiiKLoginPostResponseHelper;
 import com.lostfind.application.MyApplication;
 import com.lostfind.googleintegration.GoogleSignIn;
+import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.interfaces.SocialIntgration;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.BikeConstants;
@@ -64,7 +66,7 @@ https://www.youtube.com/watch?v=WB4yukV3S88
  * create an instance of this fragment.
  */
 //https://www.numetriclabz.com/android-google-plus-integration-and-login-tutorial/
-public class SocialFragment extends Fragment implements View.OnClickListener,SocialIntgration/*, GoogleApiClient.OnConnectionFailedListener ,GoogleApiClient.ConnectionCallbacks*/{
+public class SocialFragment extends Fragment implements View.OnClickListener,SocialIntgration,SiikReceiveListener/*, GoogleApiClient.OnConnectionFailedListener ,GoogleApiClient.ConnectionCallbacks*/{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,6 +99,8 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
 
     private EditText loginEmail,loginPassword;
     private String faceBookEmail = "";
+
+
 
     public SocialFragment() {
         // Required empty public constructor
@@ -190,7 +194,42 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
 
     }
 
-   /* private void initSocialLogin(View v){
+    private void saveTokenInPrefs(String token){
+        sharedUtils.saveStringPreferences(getActivity(), "token", token);
+    }
+
+    private void saveInSharedPreferences(String responseJSON) {
+
+
+        sharedUtils.saveStringPreferences(getActivity(), "email", responseJSON);
+        Toast.makeText(getActivity(), "Data Saved", Toast.LENGTH_LONG).show();
+        sharedUtils.saveStringPreferences(getActivity(), "loginType", "emailProfile");
+    }
+
+    @Override
+    public void receiveResult(String result) {
+       if(result.equalsIgnoreCase("Success")){
+           if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+
+               /*Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();*/
+           try {
+               JSONObject jsonObject = new JSONObject(MyApplication.getInstance().getRegistrationResponseMessage());
+               String token  = jsonObject.getString("token");
+               Log.d(TAG, "Token:::"+token);
+               saveTokenInPrefs(token);
+               saveInSharedPreferences(jsonObject.toString());
+
+           }catch (JSONException e){
+               e.printStackTrace();
+           }
+           }
+           callSlidingMenu();
+
+       }else if(result.equalsIgnoreCase("Post Failed")){
+
+       }
+    }
+    /* private void initSocialLogin(View v){
         LinearLayout loginLayout  = (LinearLayout)v.findViewById(R.id.registerview);
       //  LinearLayout loginLayout_child  = (LinearLayout)loginLayout.findViewById(R.id.social_login_child);
 
@@ -255,15 +294,15 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.gplus:
-               googlePlusLogin();
+            //   googlePlusLogin();
                 break;
             case R.id.fbook:
-                 fbLogin();
-                //onFblogin();
+          //       fbLogin();
+
                 break;
             case R.id.newuser:
                 getFragmentManager().beginTransaction()
-                        .replace(mContainerId,  RegistrationFragment.newInstance("", ""))
+                        .replace(mContainerId, RegistrationFragment.newInstance("", ""))
                         .commit();
                 break;
             case R.id.login:
@@ -283,32 +322,8 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         String email = loginEmail.getText().toString();
         String password = loginPassword.getText().toString();
         String emailJSON = sharedUtils.getStringPreferences(getActivity(),"email");
-        if(!TextUtils.isEmpty(emailJSON)){
-            try{
-                JSONObject emailJSONObject = new JSONObject(emailJSON);
-                String jsonEmailVal  = emailJSONObject.getString("emailId");
-                String jsonPassVal =  emailJSONObject.getString("password");
+        new SiiKLoginPostResponseHelper(getActivity(),SocialFragment.this,email,password).execute(BikeConstants.LOGIN_POST_SERVICE_URL);
 
-                if(email.equalsIgnoreCase(jsonEmailVal)){
-                    if(password.equalsIgnoreCase(jsonPassVal)){
-        //                launchMapSlidingMenu();
-                        sharedUtils.saveStringPreferences(getActivity(),"loginType","emailProfile");
-                    //    getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("","")).commit();
-
-                       callSlidingMenu();
-                    }else{
-                        Toast.makeText(getActivity(),"Wrong password",Toast.LENGTH_LONG).show();
-                    }
-                }else{
-                    Toast.makeText(getActivity(),"Email not found",Toast.LENGTH_LONG).show();
-                }
-
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-
-
-        }
     }else{
         Toast.makeText(getActivity(),"Login Fields Can't be Empty",Toast.LENGTH_LONG).show();
     }
@@ -355,6 +370,8 @@ private void googlePlusLogin(){
                   @Override
                   public void onSuccess(LoginResult loginResult) {
                       Log.d("Success", "Login");
+                      Log.d("Social Fragment","Facebook AccessToken::::"+
+                              loginResult.getAccessToken().getToken());
 
                       Profile profile = Profile.getCurrentProfile();
 
@@ -367,6 +384,7 @@ private void googlePlusLogin(){
                                           JSONObject object,
                                           GraphResponse response) {
                                       Log.v("LoginActivity Response ", response.toString());
+
 
                                       try {
                                           String Name = object.getString("name");

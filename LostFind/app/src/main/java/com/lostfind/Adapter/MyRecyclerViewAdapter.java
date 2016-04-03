@@ -14,17 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lostfind.DTO.DataObject;
+import com.lostfind.DTO.SearchDTO;
 import com.lostfind.R;
 import com.lostfind.interfaces.MyClickListener;
 
 import java.util.ArrayList;
-
+import java.util.List;
+//http://loopj.com/android-smart-image-view/
 
 public class MyRecyclerViewAdapter extends RecyclerView
         .Adapter<MyRecyclerViewAdapter
         .DataObjectHolder> {
     private  static String LOG_TAG = "MyRecyclerViewAdapter";
-    private ArrayList<DataObject> mDataset;
+    private List<SearchDTO> mDataset;
     private static MyClickListener myClickListener;
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
@@ -63,7 +65,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
         this.myClickListener = myClickListener;
     }
 
-    public MyRecyclerViewAdapter(ArrayList<DataObject> myDataset, MyClickListener myClickListener) {
+    public MyRecyclerViewAdapter(List<SearchDTO> myDataset, MyClickListener myClickListener) {
         mDataset = myDataset;
         this.myClickListener = myClickListener;
     }
@@ -81,13 +83,13 @@ public class MyRecyclerViewAdapter extends RecyclerView
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.description.setText(mDataset.get(position).getItemDescription());
-        holder.lostStatus.setText(mDataset.get(position).getItemStatus());
-        holder.searchIcon.setTag(position);
+        holder.lostStatus.setText(mDataset.get(position).getStatus());
+        holder.searchIcon.setTag(mDataset.get(position).getItemId());
 
 
     }
 
-    public void addItem(DataObject dataObj, int index) {
+    public void addItem(SearchDTO dataObj, int index) {
         mDataset.add(dataObj);
         notifyItemInserted(index);
     }

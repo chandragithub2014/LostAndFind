@@ -26,6 +26,7 @@ import com.lostfind.MainActivity;
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
 import com.lostfind.fragments.BlankFragment;
+import com.lostfind.fragments.CommunityFragment;
 import com.lostfind.fragments.GoogleSignOut;
 import com.lostfind.fragments.HomeFragment;
 import com.lostfind.fragments.PasswordResetFragment;
@@ -230,12 +231,20 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 break;
 
             case 6:
-            case 7:
+
 
                 Fragment blankFrag = new BlankFragment();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.mapparentLayout,blankFrag)
+                        .commit();
+                break;
+            case 7:
+
+                Fragment communityFrag = new CommunityFragment();
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.mapparentLayout,communityFrag)
                         .commit();
                 break;
 

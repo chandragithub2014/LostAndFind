@@ -20,6 +20,7 @@ import com.lostfind.DTO.SearchDTO;
 import com.lostfind.R;
 import com.lostfind.WebserviceHelpers.SiiKGetJSONParser;
 import com.lostfind.WebserviceHelpers.SiiKGetResponseHelper;
+import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.MyClickListener;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.utils.BikeConstants;
@@ -39,6 +40,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -67,7 +69,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SearchFragment extends Fragment implements MyClickListener,OnClickListener,SiikReceiveListener {
+public class SearchFragment extends Fragment implements SiikReceiveListener ,MyClickListener,OnClickListener {
 	private static final String TAG = "SearchFragment";
 	private int PICK_IMAGE_REQUEST = 1;
 	private View searchView;
@@ -164,9 +166,14 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
 					String strlocation = location_spinner.getText().toString();//location.getSelectedItem().toString();
 					Cursor resultCursor = new SiikDBHelper().getSearchResults(strCategory,strlocation,getActivity());
 					TableLayout tableLayout  = createTableLayout(resultCursor);*/
+				makeWebServiceCall();
 
+/*if(BikeConstants.IS_WEB_SERVICE_ENABLED){
+         makeWebServiceCall();
+}else{
+	launchResultsList();
+}*/
 
-                launchResultsList();
 
 					
 
@@ -187,19 +194,39 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
         searchResults.setHasFixedSize(true);
         final LinearLayoutManager   mLayoutManager = new LinearLayoutManager(getActivity());
         searchResults.setLayoutManager(mLayoutManager);
+        setSearchListAdapter();
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+        searchResults.addItemDecoration(itemDecoration);
+
+    }
+
+    private void setSearchListAdapter(){
         mAdapter = new MyRecyclerViewAdapter(getDataSet(),SearchFragment.this);
+        searchResults.setAdapter(mAdapter);
+    }
+
+
+    private void lauchWebserviceResultsList(List<SearchDTO> resultList){
+        searchResults.setHasFixedSize(true);
+        final LinearLayoutManager   mLayoutManager = new LinearLayoutManager(getActivity());
+        searchResults.setLayoutManager(mLayoutManager);
+        mAdapter = new MyRecyclerViewAdapter(resultList,SearchFragment.this);
         searchResults.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
         searchResults.addItemDecoration(itemDecoration);
     }
-
-    private ArrayList<DataObject> getDataSet() {
+    private ArrayList<SearchDTO> getDataSet() {
         String[] stringArray = getActivity().getResources().getStringArray(R.array.array_name);
-        ArrayList results = new ArrayList<DataObject>();
+        ArrayList results = new ArrayList<SearchDTO>();
+
         for(int i=0;i<stringArray.length;i++) {
-            DataObject obj = new DataObject("",stringArray[i],"found");
-            results.add(i, obj);
+         //   DataObject obj = new DataObject("",stringArray[i],"found");
+     //       results.add(i, obj);
+
+			SearchDTO obj = new 	SearchDTO("", "desc","found", ""+(i+1), stringArray[i]);
+			results.add(i, obj);
         }
         return results;
     }
@@ -541,10 +568,16 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
     @Override
     public void receiveResult(String result) {
          if(result!=null){
-             if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL)){
-                 Toast.makeText(getActivity(),result,Toast.LENGTH_LONG).show();
-             }else{
-
+             if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL) || result.equalsIgnoreCase("Get Failed")){
+				 if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+					 Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+				 }
+             }else if(result.equalsIgnoreCase("success")){
+				 if(!TextUtils.isEmpty(MyApplication.getInstance().getSearchResponse())){
+					 //Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+					 String searchResponse = MyApplication.getInstance().getSearchResponse();
+					 makeCallToJSONParser(searchResponse);
+				 }
              }
          }
     }
@@ -591,6 +624,7 @@ public class SearchFragment extends Fragment implements MyClickListener,OnClickL
        List<SearchDTO> jsonResponseList = new SiiKGetJSONParser().getParseResponse(getActivity(),serviceResponse);
         if(jsonResponseList!=null && jsonResponseList.size()>0){
             //populate list;
+            lauchWebserviceResultsList(jsonResponseList);
         }
     }
 

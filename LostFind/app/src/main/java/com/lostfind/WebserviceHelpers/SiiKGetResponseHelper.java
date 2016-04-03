@@ -3,8 +3,11 @@ package com.lostfind.WebserviceHelpers;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.utils.BikeConstants;
 import com.lostfind.utils.NetworkCheck;
@@ -34,10 +37,13 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
     //private ContentValues contentvalues = null;
     private ProgressDialog progressDialog = null;
     private SiikReceiveListener receiveListener = null;
-
-    public SiiKGetResponseHelper(Context ctx, SiikReceiveListener receiveListener){
+   private JSONObject jsonPayLoadList;
+SharedPreferencesUtils sharedPreferencesUtils;
+    public SiiKGetResponseHelper(Context ctx, SiikReceiveListener receiveListener/*,JSONObject jsonPayLoadList*/){
         this.ctx = ctx;
         this.receiveListener = receiveListener;
+      //  this.jsonPayLoadList = jsonPayLoadList;
+        sharedPreferencesUtils = new SharedPreferencesUtils();
         showProgressDialog();
 
     }
@@ -107,33 +113,30 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
         if(urlConnection!=null){
             try{
                 int statusCode = urlConnection.getResponseCode();
+                Log.d(TAG,"StausCode::::"+statusCode);
                 if (statusCode ==  BikeConstants.STATUSCODE_OK) {
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
                     response = convertStreamToString(inputStream);
                     Log.d(TAG, "GET Response for HTTPURLConnection:::"+response);
-                }else{
-                    Log.e(TAG, "status code["+urlConnection.getResponseCode()+"] Reason["+urlConnection.getResponseMessage()+"]");
-                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                    response = convertStreamToString(inputStream);
-                    if (response != null) {
-                        return "Network Fail";
+                    MyApplication.getInstance().setSearchResponse(response);
+                    response = "success";
+                    return  response;
 
-                    }else {
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("error",
-                                    urlConnection.getResponseCode());
-                            jsonObject.put(
-                                    "error_description",
-                                    urlConnection.getResponseMessage());
-                            response = jsonObject.toString();
-                        } catch (JSONException e) {
-                            Log.e(TAG,
-                                    "JSONException occurred when is ConfigDBParse Failed."
-                                            + e.getMessage());
-                            e.printStackTrace();
-                        }
+                }else
+               inputStream  = new BufferedInputStream(urlConnection.getErrorStream());
+                String serviceResponse = convertStreamToString(inputStream);
+                Log.d(TAG,"Service Response"+serviceResponse);
+                if(!TextUtils.isEmpty(serviceResponse)) {
+                    try{
+                        JSONObject responseJSON = new JSONObject(serviceResponse);
+                        String responseMessage = responseJSON.getString("message");
+                        MyApplication.getInstance().setRegistrationResponseMessage(responseMessage);
+                        response = "Get Failed";
+
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
+
                 }
             }
             catch (SocketException e) {
@@ -142,12 +145,14 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
                                 + e.getMessage());
                 e.printStackTrace();
                 response = "Network Fail";
+                MyApplication.getInstance().setRegistrationResponseMessage("Network Fail");
             } catch (IOException e) {
                 Log.e(TAG,
                         "IOException occurred while while excecuting the  Service."
                                 + e.getMessage());
                 e.printStackTrace();
                 response = "Network Fail";
+                MyApplication.getInstance().setRegistrationResponseMessage("Network Fail");
 
             }  catch (Exception e) {
                 Log.e(TAG,
@@ -155,9 +160,11 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
                                 + e.getMessage());
                 e.printStackTrace();
                 response = "Network Fail";
+                MyApplication.getInstance().setRegistrationResponseMessage("Network Fail");
             }
         }else{
             response = "Network Fail";
+            MyApplication.getInstance().setRegistrationResponseMessage("Network Fail");
         }
         return  response;
     }
@@ -188,6 +195,13 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
             conn.setReadTimeout(timeoutSocket);
             conn.setConnectTimeout(timeoutSocket);
 			         /* optional request header */
+ String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
+            if(!TextUtils.isEmpty(headerToken)){
+                String basicAuth = "Bearer " +headerToken;
+                conn.setRequestProperty("Authorization", basicAuth);
+            }
+
+
             conn.setRequestProperty("Content-Type", "application/json");
 
 		                /* optional request header */

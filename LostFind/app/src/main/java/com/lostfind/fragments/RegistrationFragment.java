@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
+import com.lostfind.MainActivity;
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.WebserviceHelpers.SiiKPostResponseHelper;
+import com.lostfind.application.MyApplication;
+import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
+import com.lostfind.utils.BikeConstants;
 import com.lostfind.utils.EmailValidator;
 import com.lostfind.utils.PasswordValidator;
 
@@ -28,9 +34,10 @@ import org.json.JSONObject;
  * Use the {@link RegistrationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegistrationFragment extends Fragment implements View.OnClickListener{
+public class RegistrationFragment extends Fragment implements View.OnClickListener,SiikReceiveListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private final String TAG = this.getClass().getSimpleName();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -128,9 +135,13 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
                                               //   saveInSharedPreferences(userName.getText().toString(),password);
                                               if (!TextUtils.isEmpty(mobileNum.getText().toString())) {
                                                   String phoneNum = mobileNum.getText().toString();
-                                                  savePhoneNumberInPreferences("PhoneNumber", phoneNum);
-                                                  saveNameInPreferences("name",name.getText().toString());
+                                               //   savePhoneNumberInPreferences("PhoneNumber", phoneNum);
+                                                //  saveNameInPreferences("name", name.getText().toString());
                                                   saveInSharedPreferences(userName.getText().toString(), password);
+                                                  //makePostWebserviceCall(user);
+                                                  String userID = "user"+System.currentTimeMillis();
+                                                  MyApplication.getInstance().setUserIDForEmail(userID);
+                                                 makePostWebserviceCall(name.getText().toString(),userName.getText().toString(),password,userID,phoneNum,"NY");
                                               } else {
                                                   Toast.makeText(getActivity(), "Mobile Number Can't be Empty", Toast.LENGTH_LONG).show();
                                               }
@@ -210,11 +221,38 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         startActivity(i);
         getActivity().finish();
 */
-        callSlidingMenu();
+     //   callSlidingMenu();
 
     //    getFragmentManager().beginTransaction().replace(mContainerId, new BikePoolerMapFragment()).commit();
     }
 
+    private void makePostWebserviceCall(String name,String email,String password,String username,String phonnumber,String location){
+      /*
+      {
+    "username": "zzzzzzz",
+    "name": "Test User 2",
+    "password": "test223",
+    "phone": "9848012411",
+    "email": "tesyyt1@gmail.com",
+    "location": "hyyyderabad"
+}
+       */
+        Log.d(TAG,"In makePostWebserviceCall()");
+        JSONObject emailPwdJson = new JSONObject();
+        try {
+            //emailPwdJson.put("username", username);
+            emailPwdJson.put("location", location);
+            emailPwdJson.put("phone", phonnumber);
+            emailPwdJson.put("email", email);
+            emailPwdJson.put("password", password);
+            emailPwdJson.put("name", name);
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        new SiiKPostResponseHelper(getActivity(),RegistrationFragment.this,emailPwdJson).execute(BikeConstants.REGISTRATION_POST_SERVICE_URL);
+    }
     private void callSlidingMenu(){
         Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
         startActivity(i);
@@ -228,4 +266,34 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         prefs.saveStringPreferences(getActivity(), key, name);
     }
 
+    @Override
+    public void receiveResult(String result) {
+         Log.d(TAG, "Received Result" + result);
+        if(result.equalsIgnoreCase("Success")){
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage()+"Login With Credentials",Toast.LENGTH_LONG).show();
+
+            }
+            launchLogin();
+         //   callSlidingMenu();
+        }else {
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+
+    public void launchLogin(){
+        Intent i = new Intent(getActivity(), MainActivity.class); // Your list's Intent
+        //i.setFlags(i.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+        getActivity().overridePendingTransition(0, 0);
+        getActivity().finish();
+
+        getActivity().overridePendingTransition(0, 0);
+        startActivity(i);
+       // break;
+    }
 }

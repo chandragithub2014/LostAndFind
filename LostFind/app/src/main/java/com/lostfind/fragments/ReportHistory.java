@@ -186,11 +186,15 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         searchResults.addItemDecoration(itemDecoration);
     }
 
-    private ArrayList<DataObject> getDataSet() {
+    private ArrayList<SearchDTO> getDataSet() {
         String[] stringArray = getActivity().getResources().getStringArray(R.array.array_name);
-        ArrayList results = new ArrayList<DataObject>();
+        ArrayList results = new ArrayList<SearchDTO>();
+
         for(int i=0;i<stringArray.length;i++) {
-            DataObject obj = new DataObject("",stringArray[i],"found");
+            //   DataObject obj = new DataObject("",stringArray[i],"found");
+            //       results.add(i, obj);
+
+            SearchDTO obj = new 	SearchDTO("", "desc","found", ""+(i+1), stringArray[i]);
             results.add(i, obj);
         }
         return results;
@@ -347,8 +351,8 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
 
 
     private void makeWebServiceCall(){
-        new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
-                BikeConstants.SEARCH_GET_SERVICE_URL);
+       /* new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
+                BikeConstants.SEARCH_GET_SERVICE_URL);*/
     }
 
     private void makeCallToJSONParser(String serviceResponse){
