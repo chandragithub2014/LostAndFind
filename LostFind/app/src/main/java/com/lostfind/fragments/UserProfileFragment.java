@@ -27,12 +27,18 @@ import android.widget.Toast;
 
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.WebserviceHelpers.SiiKGetResponseHelper;
+import com.lostfind.WebserviceHelpers.SiiKPUTResponseHelper;
+import com.lostfind.WebserviceHelpers.SiiKPostResponseHelper;
+import com.lostfind.application.MyApplication;
+import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
+import com.lostfind.utils.BikeConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserProfileFragment extends Fragment implements  OnClickListener{
+public class UserProfileFragment extends Fragment implements  OnClickListener,SiikReceiveListener{
     private int PICK_IMAGE_REQUEST = 1;
     private int PICK_CAMERA_REQUEST = 2;
     private View userProfileView;
@@ -42,7 +48,57 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
     private boolean isViewEnabled = false;
     String[] itemNames;
     Button changeImage;
+    String profilePassword = "";
 
+    @Override
+    public void receiveResult(String result) {
+        if(result!=null){
+            if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL) || result.equalsIgnoreCase("Get Failed")){
+                if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                    Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+                }
+            }else if(result.equalsIgnoreCase("success")){
+                if(!TextUtils.isEmpty(MyApplication.getInstance().getSearchResponse())){
+                    //Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+                    String searchResponse = MyApplication.getInstance().getSearchResponse();
+                    Log.d("UserProfileFragment","Profile Info::"+searchResponse);
+                    parseProfileJSON(searchResponse);
+                    // makeCallToJSONParser(searchResponse);
+                }
+            }else if(result.equalsIgnoreCase("putsuccess")){
+                if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                    Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+                }
+            }else if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void parseProfileJSON(String profileJSON){
+        try {
+            JSONObject profileJSONObject = new JSONObject(profileJSON);
+            String profileImage = "";
+            String profileEmail = profileJSONObject.getString("email");
+             profilePassword = profileJSONObject.getString("password");
+            String profileName = profileJSONObject.getString("name");
+            String phoneNum =  profileJSONObject.getString("phone");
+            if(profileJSONObject.getString("imageurl")!=null){
+             profileImage = profileJSONObject.getString("imageurl");
+            }
+            firstName.setText(profileName);
+            lastName.setText(profileName);
+            emailId.setText(profileEmail);
+            phoneNumber.setText(phoneNum);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+    private void makeWebserviceCall(){
+        new SiiKGetResponseHelper(getActivity(), UserProfileFragment.this).execute(
+                BikeConstants.USER_PROFILE_GET_SERVICE_URL);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,13 +126,13 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
         phoneNumber = (EditText) userProfileView
                 .findViewById(R.id.phoneNumber);
         userId = (EditText) userProfileView.findViewById(R.id.userId);
-
+        userId.setVisibility(View.GONE);
         changeImage = (Button) userProfileView
                 .findViewById(R.id.change_image);
         submit = (Button) userProfileView.findViewById(R.id.save_btn);
         submit.setOnClickListener(this);
         disableView();
-        prepopulateDataIfExists();
+      //  prepopulateDataIfExists();
         ImageButton	footerImage_btn = (ImageButton)userProfileView.findViewById(R.id.footer_img_btn);
         footerImage_btn.setOnClickListener(this);
         changeImage.setOnClickListener(this);
@@ -98,7 +154,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
             }
         });*/
 
-        String userProfilePhoneNum = "";
+       /* String userProfilePhoneNum = "";
         if(!TextUtils.isEmpty(sharedPreferencesUtils.getStringPreferences(getActivity(),"PhoneNumber"))){
             userProfilePhoneNum = sharedPreferencesUtils.getStringPreferences(getActivity(),"PhoneNumber");
             phoneNumber.setText(userProfilePhoneNum);
@@ -162,7 +218,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
             }
         }
 
-
+*/
 		/* Hard coded Data */
         //	firstName.setText("Praveen");
         //	lastName.setText("");
@@ -170,7 +226,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
         //	phoneNumber.setText("+11003333");
         //	userId.setText("");
 
-
+        makeWebserviceCall();
         return userProfileView;
     }
 
@@ -305,8 +361,21 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
         String userProfileEmail = emailId.getText().toString();
         String userPhoneNum = phoneNumber.getText().toString();
         String userProfileUserId = userId.getText().toString();
-
-        String loginType = sharedPreferencesUtils.getStringPreferences(getActivity(), "loginType");
+        try {
+            JSONObject profileJson = new JSONObject();
+            profileJson.put("name", userProfileFirstName);
+            profileJson.put("password", profilePassword);
+            profileJson.put("email", userProfileEmail);
+            profileJson.put("phone", userPhoneNum);
+          //  profileJson.put("userid", userProfileUserId);
+            makePutWebServiceCall(profileJson);
+        } catch (JSONException ej){
+                ej.printStackTrace();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+    /*    String loginType = sharedPreferencesUtils.getStringPreferences(getActivity(), "loginType");
 
         try {
             JSONObject profileJson = new JSONObject();
@@ -332,12 +401,15 @@ public class UserProfileFragment extends Fragment implements  OnClickListener{
             e.printStackTrace();
         }
 
-
+*/
         //facebookprofile
         //googleprofile
 
     }
+ private void makePutWebServiceCall(JSONObject jsonPayload){
 
+     new SiiKPUTResponseHelper(getActivity(),UserProfileFragment.this,jsonPayload).execute(BikeConstants.USER_PROFILE_GET_SERVICE_URL);
+}
 
     private void prepopulateDataIfExists(){
         String profileJSONBasedOnLogin = "";
