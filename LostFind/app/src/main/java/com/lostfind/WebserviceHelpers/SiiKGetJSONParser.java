@@ -30,7 +30,7 @@ public class SiiKGetJSONParser {
               temp.setCategory((String) responseJSON.get("category"));
               temp.setImageURL(""+responseJSON.get("imageurl"));
               temp.setItemDescription((String) responseJSON.get("description"));
-              temp.setStatus((String) responseJSON.get("type"));
+              temp.setStatus((String) responseJSON.get("status"));
               parsedList.add(temp);
           }
       }catch (JSONException e){

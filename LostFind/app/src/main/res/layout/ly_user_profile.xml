@@ -146,11 +146,30 @@
             android:singleLine="true"/>
 
 
+
+        <AutoCompleteTextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/register_loc"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#9b9b9b"
+            android:layout_below="@+id/phoneNumber"
+            android:background="@drawable/edittextnewstyle"
+            android:fontFamily="sans-serif"
+            android:textStyle="normal"
+            android:textSize="20sp"
+            android:hint="Location"
+            android:paddingLeft="5dp"/>
+
+
         <Button
             android:id="@+id/save_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/phoneNumber"
+            android:layout_below="@+id/register_loc"
             android:layout_marginTop="15dp"
             android:background="@drawable/buttonshape"
             android:padding="4dp"

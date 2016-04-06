@@ -35,5 +35,6 @@ public class BikeConstants {
 	public static final boolean IS_WEB_SERVICE_ENABLED = false;
 	public static final String REPORT_POST_SERVICE_URL = IP_ADDRESS+"/items";
 	public static final String USER_PROFILE_GET_SERVICE_URL = IP_ADDRESS+"/users/@me";
+	public static final String REPORT_HISTORY_GET_SERVICE_URL = IP_ADDRESS+"/history";
 
 }

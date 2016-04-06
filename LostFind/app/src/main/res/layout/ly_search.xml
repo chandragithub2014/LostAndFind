@@ -23,12 +23,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:background="@drawable/edittextnewstyle"
-            android:hint="Decription(e.g:computer,mobile etc.)"
+            android:hint="Decription(e.g:computer,mobile..)"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:textColor="#9b9b9b"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:singleLine="true"
+
             android:paddingLeft="5dp"
 
              />
@@ -48,7 +49,8 @@
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:textColor="#9b9b9b"
-            android:textSize="22sp"
+            android:textSize="20sp"
+            android:drawablePadding="5dp"
             >
             <requestFocus />
         </AutoCompleteTextView>
@@ -70,13 +72,13 @@
             android:hint="category"
             android:drawableRight="@drawable/ic_down_arrow"
 android:layout_below="@+id/find_loss_location"
-            android:background="@drawable/buttonshapesearchresults"
+            android:background="@drawable/edittextnewstyle"
             android:id="@+id/category"
             android:layout_marginTop="5dp"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             android:textColor="#9b9b9b"
-            android:textSize="22sp"
+            android:textSize="20sp"
 
             android:drawablePadding="5dp"
             android:paddingRight="5dp"
@@ -107,6 +109,7 @@ android:layout_below="@+id/find_loss_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             layout="@layout/searchresults"
+            android:layout_marginLeft="5dp"
             android:layout_below="@+id/relativeLayout1"
             ></include>
 

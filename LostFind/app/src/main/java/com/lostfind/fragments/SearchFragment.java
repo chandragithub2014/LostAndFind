@@ -6,12 +6,14 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.lostfind.Adapter.MyRecyclerViewAdapter;
 import com.lostfind.DBManager.SiikDBHelper;
@@ -84,6 +86,10 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
      Button category;
     String[] categoryNames;
 	Button toDateBtn,fromDateBtn;
+	String queryString = "";
+    EditText description;
+    String from_date="";
+    String to_Date = "";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,7 +117,7 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 			location_spinner = (AutoCompleteTextView)searchView.findViewById(R.id.find_loss_location);
 
 
-
+        description = (EditText)searchView.findViewById(R.id.search_comments);
 
 		final Calendar c = Calendar
 					.getInstance();
@@ -137,28 +143,28 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 		});
 
 		fromDateBtn.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy",Locale.getDefault());
-				Date date = null;
-					date = new Date();
-				c.setTime(date);
-				 year =  c.get(Calendar.YEAR);
-				 month =  c.get(Calendar.MONTH);
-				 day =   c.get(Calendar.DAY_OF_MONTH);
-				    new DatePickerDialog(getActivity(), datePickerListener, 
-	                         year, month,day).show();
-			}
-		});
+
+            @Override
+            public void onClick(View arg0) {
+                SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+                Date date = null;
+                date = new Date();
+                c.setTime(date);
+                year = c.get(Calendar.YEAR);
+                month = c.get(Calendar.MONTH);
+                day = c.get(Calendar.DAY_OF_MONTH);
+                new DatePickerDialog(getActivity(), datePickerListener,
+                        year, month, day).show();
+            }
+        });
 
         initRecyclerView();
      //   rootLayout	 = (LinearLayout) searchView.findViewById(R.id.tablelayout);
 		submit.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-			//	  rootLayout.removeAllViews();
-			//	  ScrollView sv = new ScrollView(getActivity());
+            @Override
+            public void onClick(View arg0) {
+                //	  rootLayout.removeAllViews();
+                //	  ScrollView sv = new ScrollView(getActivity());
 				   /*  VerticalScrollView hsv = new HorizontalScrollView(getActivity());
 				     hsv.addView(tableLayout);*/
 				  
@@ -166,7 +172,92 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 					String strlocation = location_spinner.getText().toString();//location.getSelectedItem().toString();
 					Cursor resultCursor = new SiikDBHelper().getSearchResults(strCategory,strlocation,getActivity());
 					TableLayout tableLayout  = createTableLayout(resultCursor);*/
-				makeWebServiceCall();
+                String description = comments.getText().toString();
+                String item_category = category.getText().toString();
+                String location = location_spinner.getText().toString();
+                String from_Date = "";
+                String to_date = "";
+                if(!TextUtils.isEmpty(from_date)){
+                    from_Date = from_date;
+                }
+                if(!TextUtils.isEmpty(to_Date)){
+                    to_date = to_Date;
+                }
+
+
+                if (!TextUtils.isEmpty(description)) {
+                    if (!TextUtils.isEmpty(queryString)) {
+
+                        queryString += "&" + "description=" + description;
+                    } else {
+                        queryString = "description=" + description;
+                    }
+                }
+
+                if (!TextUtils.isEmpty(item_category)) {
+                    if (!TextUtils.isEmpty(queryString)) {
+                        queryString += "&" + "category=" + item_category;
+                    } else {
+                        queryString = "category=" + item_category;
+                    }
+                }
+
+
+                if (!TextUtils.isEmpty(location)) {
+                    String formattedLocation = location.replaceAll("[, ;]", "");
+                    if (!TextUtils.isEmpty(queryString)) {
+                        queryString += "&" + "location=" + formattedLocation;
+                    } else {
+                        queryString = "location=" + formattedLocation;
+                    }
+                }
+
+                if(!TextUtils.isEmpty(to_date)){
+                    String formattedDate = "";
+                    formattedDate = "to_date="+to_date+"00:00:00.000";
+                    if (!TextUtils.isEmpty(queryString)) {
+
+                        queryString += "&" + formattedDate.replaceAll("\\s+","");
+                    }else{
+                        queryString = formattedDate.replaceAll("\\s+","");
+                    }
+
+                }
+
+
+                if(!TextUtils.isEmpty(from_Date)){
+                    String formattedDate = "";
+                    formattedDate = "from_date="+from_date+"00:00:00.000";
+                    if (!TextUtils.isEmpty(queryString)) {
+
+                        queryString += "&" +formattedDate.replaceAll("\\s+","");
+                    }else{
+                        queryString = formattedDate.replaceAll("\\s+","");
+                    }
+
+                }
+
+               /* if (!to_date.equalsIgnoreCase("to date")) {
+                    if (!TextUtils.isEmpty(queryString)) {
+                        queryString += "&" + "to_date=" + to_date + "00:00:00.000";
+                    } else {
+                        queryString = "to_date=" + to_date + "00:00:00.000";
+                    }
+                }
+
+                if (!from_date.equalsIgnoreCase("from")) {
+                    if (!TextUtils.isEmpty(queryString)) {
+                        String formattedDate = "from_date="+from_date+"00:00:00.000";
+                        queryString += "&" + formattedDate.replaceAll("\\s+","");
+                    } else {
+                        String formattedDate = "from_date="+from_date+"00:00:00.000";
+                        queryString =formattedDate.replaceAll("\\s+","");
+                    }
+                }*/
+           //    String s =  from_date+"00:00:00.00";
+               // Log.d(TAG, new Date(from_date).getTime());
+           //     getCalendarFromISO(from_date);
+                makeWebServiceCall();
 
 /*if(BikeConstants.IS_WEB_SERVICE_ENABLED){
          makeWebServiceCall();
@@ -175,15 +266,49 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 }*/
 
 
-					
-
-			}
+            }
 		});
         setGoogleLocation();
-		return searchView;
+     return searchView;
 	}
 
+    private  Calendar getCalendarFromISO(String datestring) {
+        String ISO8601DATEFORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSZ";
 
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault(), Locale.getDefault()) ;
+        SimpleDateFormat dateformat = new SimpleDateFormat(ISO8601DATEFORMAT, Locale.getDefault());
+        try {
+            Date date = dateformat.parse(datestring);
+            date.setHours(date.getHours()-1);
+            calendar.setTime(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+Log.d("TAG","Calendar::"+calendar);
+        return calendar;
+    }
+    private String fetchFormattedString(String location){
+        String str = location;
+        String splitted[] = str.split(",");
+        StringBuffer sb = new StringBuffer();
+        String retrieveData = "";
+        for(int i =0; i<splitted.length; i++){
+            retrieveData = splitted[i];
+            if((retrieveData.trim()).length()>0){
+
+                if(i!=0){
+                    sb.append(",");
+                }
+                sb.append(retrieveData);
+
+            }
+        }
+
+        str = sb.toString();
+        System.out.println(str);
+        return  str;
+    }
 	private void initRecyclerView(){
        // ScrollView resultsView = (ScrollView)searchView.findViewById(R.id.results_table);
         LinearLayout searchResultsllayout = (LinearLayout)searchView.findViewById(R.id.results_table);
@@ -245,13 +370,34 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 			month = selectedMonth;
 			day = selectedDay;
 
-			// set selected date into textview
+			int finalMonth = month+1;
+			String formattedMonth;
+			if(finalMonth>=1 && finalMonth<=9){
+				formattedMonth = "0"+finalMonth;
+			}else{
+				formattedMonth = ""+finalMonth;
+			}
+            String dayString ="";
+            if (day < 10) {
+                dayString = "0"
+                        + day;
+            } else {
+                dayString = ""
+                        + day;
+            }
+
+            // set selected date into textview
 		//	Button dateBtn = (Button) searchView.findViewById(R.id.dateButton);
 			
-			selectedDate = new StringBuilder().append(month + 1)
-					   .append("-").append(day).append("-").append(year)
-					   .append(" ");
-			fromDateBtn.setText(selectedDate.toString());
+			selectedDate = new StringBuilder().append(year)
+                    .append("-").append(formattedMonth).append("-").append(dayString)
+                    .append(" ");
+             from_date=selectedDate.toString();
+
+            StringBuilder unFormattedDate = new StringBuilder().append(year)
+                    .append("-").append(month+1).append("-").append(day)
+                    .append(" ");
+			fromDateBtn.setText(unFormattedDate.toString());
 		}
 	};
 
@@ -264,12 +410,31 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 			month = selectedMonth;
 			day = selectedDay;
 
+			int finalMonth = month+1;
+			String formattedMonth;
+			if(finalMonth>=1 && finalMonth<=9){
+				formattedMonth = "0"+finalMonth;
+			}else{
+				formattedMonth = ""+finalMonth;
+			}
 			// set selected date into textview
 
-			selectedDate = new StringBuilder().append(month + 1)
-					.append("-").append(day).append("-").append(year)
+            String dayString ="";
+            if (day < 10) {
+                dayString = "0"
+                        + day;
+            } else {
+                dayString = ""
+                        + day;
+            }
+			selectedDate = new StringBuilder().append(year)
+					.append("-").append(formattedMonth).append("-").append(dayString)
 					.append(" ");
-			toDateBtn.setText(selectedDate.toString());
+            to_Date=selectedDate.toString();
+            StringBuilder unFormattedDate = new StringBuilder().append(year)
+                    .append("-").append(month+1).append("-").append(day)
+                    .append(" ");
+			toDateBtn.setText(unFormattedDate.toString());
 		}
 	};
 	
@@ -616,8 +781,14 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
     }
 
     private void makeWebServiceCall(){
-        new SiiKGetResponseHelper(getActivity(), SearchFragment.this).execute(
-                BikeConstants.SEARCH_GET_SERVICE_URL);
+        if(!TextUtils.isEmpty(queryString)){
+            new SiiKGetResponseHelper(getActivity(), SearchFragment.this).execute(
+                    BikeConstants.SEARCH_GET_SERVICE_URL+"?"+queryString);
+            queryString  = "";
+        }else {
+            new SiiKGetResponseHelper(getActivity(), SearchFragment.this).execute(
+                    BikeConstants.SEARCH_GET_SERVICE_URL);
+        }
     }
 
     private void makeCallToJSONParser(String serviceResponse){

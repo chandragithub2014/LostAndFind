@@ -126,7 +126,9 @@ public class SiiKPostUploadResponseHelper extends AsyncTask<String, Void, String
             conn.setUseCaches(false); // Don't use a Cached Copy
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Accept-Encoding", "");
-            //conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setChunkedStreamingMode(1024);
+//            conn.setFixedLengthStreamingMode(1024);
+            conn.setRequestProperty("Connection", "Keep-Alive");
             conn.setRequestProperty("ENCTYPE", "multipart/form-data");
             conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
             conn.setRequestProperty("uploaded_file", "avatar");

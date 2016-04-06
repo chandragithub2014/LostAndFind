@@ -202,7 +202,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
 
 
         sharedUtils.saveStringPreferences(getActivity(), "email", responseJSON);
-        Toast.makeText(getActivity(), "Data Saved", Toast.LENGTH_LONG).show();
+     //   Toast.makeText(getActivity(), "Data Saved", Toast.LENGTH_LONG).show();
         sharedUtils.saveStringPreferences(getActivity(), "loginType", "emailProfile");
     }
 

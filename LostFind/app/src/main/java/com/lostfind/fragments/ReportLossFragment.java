@@ -42,6 +42,7 @@ import android.widget.Toast;
 
 import com.lostfind.DBManager.SiikDBHelper;
 import com.lostfind.R;
+import com.lostfind.WebserviceHelpers.SiiKImageUploadHelper;
 import com.lostfind.WebserviceHelpers.SiiKPostResponseHelper;
 import com.lostfind.WebserviceHelpers.SiiKPostUploadResponseHelper;
 import com.lostfind.application.MyApplication;
@@ -328,7 +329,8 @@ if(isFromDateSet) {
                 imageView.setImageBitmap(bitmap);
       //          Toast.makeText(getActivity(),"URI::::"+uri,Toast.LENGTH_LONG).show();
                 imageUrl = ""+uri;
-                new SiiKPostUploadResponseHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
+              //  new SiiKPostUploadResponseHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
+                new SiiKImageUploadHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -380,11 +382,11 @@ if(isFromDateSet) {
                     // so
                     // addj
                     // 1
+                    .append(mYear)
+                    .append("-")
                     .append(monthString)
                     .append("-")
                     .append(dayString)
-                    .append("-")
-                    .append(mYear)
                     .append(" ").toString();
 
             fromDate
@@ -434,11 +436,11 @@ if(isFromDateSet) {
                     // so
                     // addj
                     // 1
+                    .append(mYear)
+                    .append("-")
                     .append(monthString)
                     .append("-")
                     .append(dayString)
-                    .append("-")
-                    .append(mYear)
                     .append(" ").toString();
 
             toDate
@@ -505,23 +507,25 @@ if(isFromDateSet) {
         Log.d(TAG,"In makePostWebserviceCall()");
         JSONObject reportLostFoundJson = new JSONObject();
         try {
+            String formattedLocation  = location_spinner.getText().toString().replaceAll("[, ;]", "");
+            Log.d("TAH","fotmmateedloc"+formattedLocation);
             reportLostFoundJson.put("description", description.getText().toString());
-            reportLostFoundJson.put("location", location_spinner.getText().toString());
+            reportLostFoundJson.put("location", formattedLocation);
             reportLostFoundJson.put("category", spinnerType.getText().toString());
             reportLostFoundJson.put("info", additionalInfo.getText().toString());
             if(mParam1){
-                reportLostFoundJson.put("type", "lost");
+                reportLostFoundJson.put("status", "lost");
             }else{
-                reportLostFoundJson.put("type", "found");
+                reportLostFoundJson.put("status", "found");
             }
 
            // reportLostFoundJson.put("imageurl", "");
             if(!TextUtils.isEmpty(toDate.getText().toString())) {
-                reportLostFoundJson.put("to_date", toDate.getText().toString());
+                reportLostFoundJson.put("to_date", toDate.getText().toString()+"00:00:00.000");
             }else{
                 reportLostFoundJson.put("to_date", "");
             }
-            reportLostFoundJson.put("from_date",fromDate.getText().toString());
+            reportLostFoundJson.put("from_date",fromDate.getText().toString()+"00:00:00.000");
 
             makeWebServiceCall(reportLostFoundJson);
 
@@ -579,9 +583,9 @@ private void popualteDateInDB(){
     try {
         int rowId = (Integer) new SiikDBHelper().insertSiiKData("lostorfound", cv);
         if(rowId != -1){
-            Toast.makeText(getActivity(),"Data Saved",Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(getActivity(),"Data Saved",Toast.LENGTH_SHORT).show();
         }else{
-            Toast.makeText(getActivity(),"Data Save Failed",Toast.LENGTH_SHORT).show();
+      //      Toast.makeText(getActivity(),"Data Save Failed",Toast.LENGTH_SHORT).show();
         }
     }
     catch (SQLException e){

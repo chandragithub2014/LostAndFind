@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,6 +21,7 @@ import com.lostfind.DTO.SearchDTO;
 import com.lostfind.R;
 import com.lostfind.WebserviceHelpers.SiiKGetJSONParser;
 import com.lostfind.WebserviceHelpers.SiiKGetResponseHelper;
+import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.MyClickListener;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.utils.BikeConstants;
@@ -39,6 +41,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -82,8 +85,16 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
     private RecyclerView.LayoutManager mLayoutManager;
     Button category;
     String[] categoryNames;
-    CheckBox lost_check,found_check;
+    CheckBox lost_check,found_check,claim_check;
 
+    String lostQueryString="";
+    String foundQueryString="";
+    String claimQueryString = "";
+    private boolean isLostChecked=false;
+    private boolean isFoundChecked = false;
+    private boolean isClaimChecked = false;
+    HashMap<String,String> queryHash ;
+    String queryString = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +107,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         super.onCreateView(inflater, container, savedInstanceState);
         searchView = inflater.inflate(R.layout.report_history_layout, container,
                 false);
-
+        queryHash = new HashMap<String,String>();
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
         toolBarTitle.setText("Your History");
@@ -105,12 +116,58 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         LinearLayout check_search_Layout = (LinearLayout)searchView.findViewById(R.id.checkbox_layout);
         lost_check  = (CheckBox)check_search_Layout.findViewById(R.id.lost_check);
         found_check = (CheckBox)check_search_Layout.findViewById(R.id.found_check);
+        claim_check = (CheckBox)check_search_Layout.findViewById(R.id.found_claim);
         ImageView submit = (ImageView) check_search_Layout.findViewById(R.id.search_btn);
         initRecyclerView();
         submit.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchResultsList();
+               /* if (isLostChecked && isFoundChecked && isClaimChecked) {
+                    queryString = "status=lost&status=found&status=claim";
+                } else if (isLostChecked && !isFoundChecked) {
+                    queryString = "status=lost";
+                } else if (!isLostChecked && isFoundChecked) {
+                    queryString = "status=found";
+                }*/
+
+                makeWebServiceCall();
+            }
+        });
+
+        lost_check.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    isLostChecked = true;
+                    queryHash.put("lost","true");
+                }else{
+                    isLostChecked = false;
+                    queryHash.put("lost","false");
+                }
+            }
+        });
+
+        found_check.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    queryHash.put("found","true");
+                }else{
+                    isFoundChecked = false;
+                    queryHash.put("found","false");
+                }
+            }
+        });
+
+        claim_check.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((CheckBox) v).isChecked()) {
+                    queryHash.put("claim","true");
+                }else{
+                    isClaimChecked = false;
+                    queryHash.put("claim","false");
+                }
             }
         });
         /*category = (Button) searchView
@@ -285,23 +342,6 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
 	     return searchResults;
 	}*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onSpecificViewOnItemClick(int position, View v) {
         Fragment  infoFragment = null;
@@ -326,10 +366,20 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
     @Override
     public void receiveResult(String result) {
         if(result!=null){
-            if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL)){
-                Toast.makeText(getActivity(),result,Toast.LENGTH_LONG).show();
-            }else{
-
+            if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL) || result.equalsIgnoreCase("Get Failed")){
+                if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
+                    Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+                }
+            }else if(result.equalsIgnoreCase("success")){
+                if(!TextUtils.isEmpty(MyApplication.getInstance().getSearchResponse())){
+                    //Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+                    String searchResponse = MyApplication.getInstance().getSearchResponse();
+                    if(searchResponse.equalsIgnoreCase("no items found")){
+                        Toast.makeText(getActivity(),searchResponse,Toast.LENGTH_LONG).show();
+                    }else {
+                        makeCallToJSONParser(searchResponse);
+                    }
+                }
             }
         }
     }
@@ -351,15 +401,69 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
 
 
     private void makeWebServiceCall(){
-       /* new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
-                BikeConstants.SEARCH_GET_SERVICE_URL);*/
+
+        String lostString = "";
+        String findString = "";
+        String claimString = "";
+
+        if(queryHash!=null && queryHash.size()>0){
+            if(queryHash.get("lost")!=null && queryHash.get("lost").equalsIgnoreCase("true")){
+                lostString = "status=lost";
+                if(!TextUtils.isEmpty(queryString)){
+                    queryString += "&"+lostString;
+                }else{
+                    queryString = lostString;
+                }
+            }
+            if(queryHash.get("found")!=null && queryHash.get("found").equalsIgnoreCase("true")){
+                findString = "status=found";
+                if(!TextUtils.isEmpty(queryString)){
+                    queryString += "&"+findString;
+                }else{
+                    queryString = findString;
+                }
+            }
+            if(queryHash.get("claim")!=null && queryHash.get("claim").equalsIgnoreCase("true")){
+                claimString = "status=claim";
+                if(!TextUtils.isEmpty(queryString)){
+                    queryString += "&"+claimString;
+                }else{
+                    queryString = claimString;
+                }
+            }
+        }
+        if(!TextUtils.isEmpty(queryString)){
+            new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
+                    BikeConstants.REPORT_HISTORY_GET_SERVICE_URL+"?"+queryString);
+            queryHash = new HashMap<String,String>();
+            queryString = "";
+            lost_check.setChecked(false);
+            found_check.setChecked(false);
+            claim_check.setChecked(false);
+
+        }else {
+            new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
+                    BikeConstants.REPORT_HISTORY_GET_SERVICE_URL);
+        }
     }
 
     private void makeCallToJSONParser(String serviceResponse){
         List<SearchDTO> jsonResponseList = new SiiKGetJSONParser().getParseResponse(getActivity(),serviceResponse);
         if(jsonResponseList!=null && jsonResponseList.size()>0){
             //populate list;
+            lauchWebserviceResultsList(jsonResponseList);
         }
+    }
+
+    private void lauchWebserviceResultsList(List<SearchDTO> resultList){
+        searchResults.setHasFixedSize(true);
+        final LinearLayoutManager   mLayoutManager = new LinearLayoutManager(getActivity());
+        searchResults.setLayoutManager(mLayoutManager);
+        mAdapter = new MyRecyclerViewAdapter(resultList,ReportHistory.this);
+        searchResults.setAdapter(mAdapter);
+        RecyclerView.ItemDecoration itemDecoration =
+                new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);
+        searchResults.addItemDecoration(itemDecoration);
     }
 
 }

@@ -50,6 +50,7 @@ SharedPreferencesUtils sharedPreferencesUtils;
     @Override
     protected String doInBackground(String... params) {
         String serviceUrl = params[0];
+        Log.d(TAG,"Service URL::::"+serviceUrl);
         String serverResponse = "";
         boolean isNetworkAvailable = new NetworkCheck().checkNetworkConnectivity(ctx);
         if(!isNetworkAvailable){
