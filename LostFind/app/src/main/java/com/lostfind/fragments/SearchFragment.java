@@ -336,7 +336,7 @@ Log.d("TAG","Calendar::"+calendar);
         searchResults.setHasFixedSize(true);
         final LinearLayoutManager   mLayoutManager = new LinearLayoutManager(getActivity());
         searchResults.setLayoutManager(mLayoutManager);
-        mAdapter = new MyRecyclerViewAdapter(resultList,SearchFragment.this);
+        mAdapter = new MyRecyclerViewAdapter(getActivity(),resultList,SearchFragment.this);
         searchResults.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);

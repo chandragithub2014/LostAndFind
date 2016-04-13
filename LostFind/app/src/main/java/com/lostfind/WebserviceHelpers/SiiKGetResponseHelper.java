@@ -136,6 +136,7 @@ SharedPreferencesUtils sharedPreferencesUtils;
 
                     }catch (Exception e){
                         e.printStackTrace();
+                        response = "Get Failed";
                     }
 
                 }

@@ -9,6 +9,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.SiikReceiveListener;
 
 import org.apache.http.HttpEntity;
@@ -17,14 +18,17 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,11 +53,22 @@ public class SiiKImageUploadHelper  extends AsyncTask<String, Void, String> {
     private boolean isFromReportLostFound = false;
     private Bitmap bitmap;
     String encodedImage = "";
+    String path;
+    String key;
 
     public SiiKImageUploadHelper(Context ctx, SiikReceiveListener receiveListener, Bitmap bitmap) {
         this.ctx = ctx;
         this.receiveListener = receiveListener;
         this.bitmap = bitmap;
+        showProgressDialog();
+
+    }
+
+    public SiiKImageUploadHelper(Context ctx, SiikReceiveListener receiveListener, String path,String key) {
+        this.ctx = ctx;
+        this.receiveListener = receiveListener;
+        this.path = path;
+        this.key = key;
         showProgressDialog();
 
     }
@@ -81,8 +96,8 @@ public class SiiKImageUploadHelper  extends AsyncTask<String, Void, String> {
     protected String doInBackground(String... params) {
         String response = null;
         String serviceUrl = params[0];
-         encodedImage = encodedBitMap(bitmap);
-        if(encodedImage!=null) {
+       /*    encodedImage = encodedBitMap(bitmap);
+      if(encodedImage!=null) {
             Map<String, String> uriParams = new HashMap<String, String>();
             uriParams.put("file", encodedImage);
 
@@ -102,11 +117,61 @@ public class SiiKImageUploadHelper  extends AsyncTask<String, Void, String> {
         }
         else{
             response = "";
+        }*/
+        if(path!=null){
+         response  =    postImageDataAsFile(serviceUrl);
+        }else{
+            response = "";
         }
         return response;
 
     }
+ private String postImageDataAsFile(String serviceURL){
+        String serverresponse = "";
 
+     File file = new File(path);
+     try {
+         HttpClient client = new DefaultHttpClient();
+       //  String postURL = "http://someposturl.com";
+         HttpPost post = new HttpPost(serviceURL);
+         SharedPreferencesUtils sharedPreferencesUtils  = new SharedPreferencesUtils();
+         String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
+         Log.d(TAG, "HederToken:::" + headerToken);
+         if(!TextUtils.isEmpty(headerToken)){
+             String basicAuth = "Bearer " +headerToken;
+             post.setHeader("Authorization", basicAuth);
+         }
+
+         FileBody bin = new FileBody(file);
+         MultipartEntity reqEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+         reqEntity.addPart(key, bin);
+         post.setEntity(reqEntity);
+         HttpResponse response = client.execute(post);
+      //  Log.d(TAG,"Status Line:::"+response.getStatusLine().getStatusCode());
+         if(response.getStatusLine().getStatusCode()==200) {
+             HttpEntity resEntity = response.getEntity();
+             if (resEntity != null) {
+                 //      Log.i("RESPONSE", EntityUtils.toString(resEntity));
+                 serverresponse = EntityUtils.toString(resEntity);
+                 Log.d(TAG, "ServerResponse:::" + serverresponse);
+                 JSONObject imageJSON = new JSONObject(serverresponse);
+                 if(imageJSON.getString("url")!=null){
+                     MyApplication.getInstance().setImageURL(imageJSON.getString("url"));
+                 }
+                 serverresponse = "uploadSuccess";
+
+             }
+         }else{
+             Log.d(TAG,"Status Line:::"+response.getStatusLine().getStatusCode());
+             MyApplication.getInstance().setImageURL("");
+             serverresponse = "uploadfail";
+         }
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+
+     return  serverresponse;
+    }
     @Override
     protected void onPostExecute(String result) {
         Log.d(TAG,"Result::::"+result);

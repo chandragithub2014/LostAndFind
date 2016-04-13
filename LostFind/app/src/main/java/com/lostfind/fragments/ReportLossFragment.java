@@ -1,6 +1,7 @@
 package com.lostfind.fragments;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -8,10 +9,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
@@ -49,7 +54,9 @@ import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.BikeConstants;
+import com.lostfind.utils.RealPathUtil;
 
+import org.apache.http.client.HttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +72,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.jar.Attributes;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -160,11 +168,9 @@ private String imageUrl="";
         footerImage_btn = (ImageButton)view.findViewById(R.id.footer_img_btn);
         footerImage_btn.setOnClickListener(this);
         root_layout = (RelativeLayout)view.findViewById(R.id.root_layout);
-        root_layout.setOnTouchListener(new View.OnTouchListener()
-        {
+        root_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent ev)
-            {
+            public boolean onTouch(View view, MotionEvent ev) {
                 hideKeyboard(view);
                 return false;
             }
@@ -283,7 +289,8 @@ if(isFromDateSet) {
                 startActivityForResult(
                         Intent.createChooser(intent, "Select Picture"),
                         PICK_IMAGE_REQUEST);*/
-                launchCameraGallerySelector();
+                checkForPermissions();
+
                 break;
         }
     }
@@ -314,12 +321,49 @@ if(isFromDateSet) {
         alert.show();
 
     }
+
+    private void checkForPermissions(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getActivity())) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            } else {
+                // continue with your code
+                Log.d("TAG","Can write");
+            }
+        }else{
+            Log.d("TAG","Build.VERSION.SDK_INT <= Build.VERSION_CODES.M");
+        }
+        // int hasWriteExternalStoragePermission  = getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        //if(getActivity().checkSelfPermission(Manifest.Per))
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+                    launchCameraGallerySelector();
+                //    writeToXMLFile(resultXML);
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                return;
+            }
+        }
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == Activity.RESULT_OK && data != null
                 && data.getData() != null) {
+
+
+          String  realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
+            Log.d(TAG,"RealPath::::"+realPath);
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
@@ -330,17 +374,26 @@ if(isFromDateSet) {
       //          Toast.makeText(getActivity(),"URI::::"+uri,Toast.LENGTH_LONG).show();
                 imageUrl = ""+uri;
               //  new SiiKPostUploadResponseHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
-                new SiiKImageUploadHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
+             //   new SiiKImageUploadHelper(getActivity(),ReportLossFragment.this,bitmap).execute("http://52.38.114.74:8000/upload");
+                new SiiKImageUploadHelper(getActivity(),ReportLossFragment.this,realPath,"item").execute("http://52.38.114.74:8000/upload/item");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if (requestCode == PICK_CAMERA_REQUEST
                 && resultCode == Activity.RESULT_OK && data != null
                 && data.getData() != null) {
+
+            Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            String realPath =  cursor.getString(idx);
+           Log.d(TAG,"Real Path:::"+realPath);
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             ImageView imageView = (ImageView) view
                     .findViewById(R.id.iv_upload);
             imageView.setImageBitmap(bp);
+
+            new SiiKImageUploadHelper(getActivity(),ReportLossFragment.this,realPath,"item").execute("http://52.38.114.74:8000/upload/item");
 
         }
     }
@@ -526,6 +579,9 @@ if(isFromDateSet) {
                 reportLostFoundJson.put("to_date", "");
             }
             reportLostFoundJson.put("from_date",fromDate.getText().toString()+"00:00:00.000");
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getImageURL())) {
+                reportLostFoundJson.put("imageurl", MyApplication.getInstance().getImageURL());
+            }
 
             makeWebServiceCall(reportLostFoundJson);
 
@@ -578,7 +634,7 @@ private void popualteDateInDB(){
     }else{
 
     }
-    cv.put("username","UserName"+System.currentTimeMillis());
+    cv.put("username", "UserName" + System.currentTimeMillis());
   //  cv.put("imageurl",imageUrl);
     try {
         int rowId = (Integer) new SiikDBHelper().insertSiiKData("lostorfound", cv);
@@ -710,13 +766,19 @@ private void popualteDateInDB(){
         Log.d(TAG, "Received Result" + result);
         if(result.equalsIgnoreCase("Success")){
             if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
-                Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+       //         Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
             }
           //  callSlidingMenu();
-        }else {
+        }else if(result.equalsIgnoreCase("uploadSuccess")){
+            Log.d(TAG,"ImageURL:::"+MyApplication.getInstance().getImageURL());
+        }
+        else {
             if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
                 Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
             }
         }
     }
+
+
+
 }

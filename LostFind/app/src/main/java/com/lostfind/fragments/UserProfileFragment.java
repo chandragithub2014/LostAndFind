@@ -1,6 +1,7 @@
 package com.lostfind.fragments;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -10,8 +11,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,12 +44,14 @@ import android.widget.Toast;
 import com.lostfind.R;
 import com.lostfind.SharedPreferencesUtils;
 import com.lostfind.WebserviceHelpers.SiiKGetResponseHelper;
+import com.lostfind.WebserviceHelpers.SiiKImageUploadHelper;
 import com.lostfind.WebserviceHelpers.SiiKPUTResponseHelper;
 import com.lostfind.WebserviceHelpers.SiiKPostResponseHelper;
 import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
 import com.lostfind.utils.BikeConstants;
+import com.lostfind.utils.RealPathUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +94,8 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
                 if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
                     Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
                 }
+            }else if(result.equalsIgnoreCase("uploadSuccess")){
+                Log.d("UserProfileFragment","ImageURL:::"+MyApplication.getInstance().getImageURL());
             }else if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
                 Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
             }
@@ -103,6 +112,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
             String phoneNum =  profileJSONObject.getString("phone");
             if(profileJSONObject.getString("imageurl")!=null){
              profileImage = profileJSONObject.getString("imageurl");
+                new LoadImage().execute(profileImage);
             }
             String location_user = profileJSONObject.getString("location");
             reg_loc.setText(location_user);
@@ -396,6 +406,8 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == Activity.RESULT_OK && data != null
                 && data.getData() != null) {
+            String  realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
+            Log.d("UserProfileFrag","RealPath::::"+realPath);
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
@@ -403,16 +415,24 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
                 ImageView imageView = (ImageView) userProfileView
                         .findViewById(R.id.user_image);
                 imageView.setImageBitmap(bitmap);
+                new SiiKImageUploadHelper(getActivity(),UserProfileFragment.this,realPath,"avatar").execute("http://52.38.114.74:8000/upload/avatar");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else if (requestCode == PICK_CAMERA_REQUEST
                 && resultCode == Activity.RESULT_OK && data != null
                 && data.getData() != null) {
+            Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            String realPath =  cursor.getString(idx);
+            Log.d("UserProfile","Real Path:::"+realPath);
             Bitmap bp = (Bitmap) data.getExtras().get("data");
             ImageView imageView = (ImageView) userProfileView
                     .findViewById(R.id.user_image);
             imageView.setImageBitmap(bp);
+
+            new SiiKImageUploadHelper(getActivity(),UserProfileFragment.this,realPath,"avatar").execute("http://52.38.114.74:8000/upload/avatar");
 
         }
     }
@@ -493,6 +513,9 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
             profileJson.put("phone", userPhoneNum);
             profileJson.put("location",reg_loc.getText().toString());
           //  profileJson.put("userid", userProfileUserId);
+            if(!TextUtils.isEmpty(MyApplication.getInstance().getImageURL())) {
+                profileJson.put("imageurl", MyApplication.getInstance().getImageURL());
+            }
             makePutWebServiceCall(profileJson);
         } catch (JSONException ej){
                 ej.printStackTrace();
@@ -568,6 +591,46 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+
+    private class LoadImage extends AsyncTask<String, String, Bitmap> {
+        Bitmap bitmap;
+        ProgressDialog pDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading Image ....");
+            pDialog.show();
+
+        }
+        protected Bitmap doInBackground(String... args) {
+            try {
+                bitmap = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        protected void onPostExecute(Bitmap image) {
+
+            if(image != null){
+                ImageView imageView = (ImageView) userProfileView
+                        .findViewById(R.id.user_image);
+             //   imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(image);
+                pDialog.dismiss();
+
+            }else{
+
+                pDialog.dismiss();
+                Toast.makeText(getActivity(), "Image Does Not exist or Network Error", Toast.LENGTH_SHORT).show();
+
             }
         }
     }

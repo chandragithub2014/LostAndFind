@@ -368,7 +368,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         if(result!=null){
             if(result.equalsIgnoreCase(BikeConstants.WEBSERVICE_NETWORK_FAIL) || result.equalsIgnoreCase("Get Failed")){
                 if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
-                    Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+               //     Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
                 }
             }else if(result.equalsIgnoreCase("success")){
                 if(!TextUtils.isEmpty(MyApplication.getInstance().getSearchResponse())){
@@ -376,6 +376,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
                     String searchResponse = MyApplication.getInstance().getSearchResponse();
                     if(searchResponse.equalsIgnoreCase("no items found")){
                         Toast.makeText(getActivity(),searchResponse,Toast.LENGTH_LONG).show();
+
                     }else {
                         makeCallToJSONParser(searchResponse);
                     }
@@ -459,7 +460,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         searchResults.setHasFixedSize(true);
         final LinearLayoutManager   mLayoutManager = new LinearLayoutManager(getActivity());
         searchResults.setLayoutManager(mLayoutManager);
-        mAdapter = new MyRecyclerViewAdapter(resultList,ReportHistory.this);
+        mAdapter = new MyRecyclerViewAdapter(getActivity(),resultList,ReportHistory.this);
         searchResults.setAdapter(mAdapter);
         RecyclerView.ItemDecoration itemDecoration =
                 new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL);

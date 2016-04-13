@@ -29,6 +29,7 @@ public class MyApplication extends Application {
     private  String registrationResponseMessage;
     private String userIDForEmail;
     private String searchResponse;
+    private String imageURL;
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
   /*  private static final String TWITTER_KEY = "LEZjsy3ZQwyscBjvLdaz7bNgv";
     private static final String TWITTER_SECRET = "CTsRGP431ghMRSeeDadFxn5usbh4exlmD7qQMINch258Cb3JX9";*/
@@ -115,6 +116,14 @@ public class MyApplication extends Application {
 
     public void setSearchResponse(String searchResponse) {
         this.searchResponse = searchResponse;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }
 
