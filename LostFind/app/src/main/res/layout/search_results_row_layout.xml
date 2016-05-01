@@ -3,6 +3,7 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5dp"
+    android:id="@+id/results_row"
    >
    <!-- <ImageView
         android:layout_width="wrap_content"
@@ -29,6 +30,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/lost_item"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:id="@+id/desc"
@@ -38,6 +40,7 @@
         android:textColor="#ffffff"
         android:fontFamily="sans-serif-light"
         android:textStyle="normal"
+        android:layout_toLeftOf="@+id/status"
         android:textSize="18sp"/>
 
     <TextView

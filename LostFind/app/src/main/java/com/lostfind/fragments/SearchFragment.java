@@ -81,7 +81,7 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 	private static final String OUT_JSON = "/json";
 	private static final String API_KEY = "AIzaSyDixji8saFmpOFmSnKXY6-uP_2mnDYG3Js";
     RecyclerView searchResults;
-    private RecyclerView.Adapter mAdapter;
+    private static RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
      Button category;
     String[] categoryNames;
@@ -90,10 +90,19 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
     EditText description;
     String from_date="";
     String to_Date = "";
+    int mContainerId  = -1;
+    List<SearchDTO> jsonResponseList;
+    List<SearchDTO> jsonResponseArrayList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Log.d(TAG, "In onCreate()");
+        setRetainInstance(true);
+       /* if(savedInstanceState!=null){
+            jsonResponseList =  savedInstanceState.getParcelableArrayList("key");
+            lauchWebserviceResultsList(jsonResponseList);
+        }*/
 	}
 
 	@Override
@@ -101,8 +110,8 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		searchView = inflater.inflate(R.layout.ly_search, container,
-				false);
-
+                false);
+        mContainerId = container.getId();
 		Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
 		TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
 		toolBarTitle.setText("Search");
@@ -159,6 +168,9 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
         });
 
         initRecyclerView();
+       /* if(jsonResponseList!=null && jsonResponseList.size()>0){
+            lauchWebserviceResultsList(jsonResponseList);
+        }*/
      //   rootLayout	 = (LinearLayout) searchView.findViewById(R.id.tablelayout);
 		submit.setOnClickListener(new OnClickListener() {
             @Override
@@ -285,7 +297,7 @@ public class SearchFragment extends Fragment implements SiikReceiveListener ,MyC
             e.printStackTrace();
         }
 
-Log.d("TAG","Calendar::"+calendar);
+        Log.d("TAG", "Calendar::" + calendar);
         return calendar;
     }
     private String fetchFormattedString(String location){
@@ -331,6 +343,18 @@ Log.d("TAG","Calendar::"+calendar);
         searchResults.setAdapter(mAdapter);
     }
 
+    /*@Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        if(jsonResponseList!=null && jsonResponseList.size()>0){
+            Log.d(TAG,"In onSaveInstanceState()");
+          outState.putParcelableArrayList("searchList", (ArrayList)jsonResponseList);
+           // outState.putPa
+        }
+
+        super.onSaveInstanceState(outState);
+        //outState.put
+    }*/
 
     private void lauchWebserviceResultsList(List<SearchDTO> resultList){
         searchResults.setHasFixedSize(true);
@@ -726,8 +750,10 @@ Log.d("TAG","Calendar::"+calendar);
     }
 
     @Override
-    public void onItemClick(int position, View v) {
-        Log.d(TAG,"Clicked Position:::"+position);
+    public void onItemClick(int position, View v,String tag) {
+        Log.d(TAG, "Clicked Position::: in SearchFragment" + position + "Tag::::"+tag);
+        ClaimRequestFragment claimFrag = ClaimRequestFragment.newInstance(tag,"");
+        getActivity().getSupportFragmentManager().beginTransaction().replace(mContainerId,claimFrag).addToBackStack(null).commit();
     }
 
     @Override
@@ -782,20 +808,23 @@ Log.d("TAG","Calendar::"+calendar);
 
     private void makeWebServiceCall(){
         if(!TextUtils.isEmpty(queryString)){
-            new SiiKGetResponseHelper(getActivity(), SearchFragment.this).execute(
+            new SiiKGetResponseHelper(getActivity(), SearchFragment.this,"Fetching search results....").execute(
                     BikeConstants.SEARCH_GET_SERVICE_URL+"?"+queryString);
             queryString  = "";
         }else {
-            new SiiKGetResponseHelper(getActivity(), SearchFragment.this).execute(
+            new SiiKGetResponseHelper(getActivity(), SearchFragment.this,"Fetching search results....").execute(
                     BikeConstants.SEARCH_GET_SERVICE_URL);
         }
     }
 
     private void makeCallToJSONParser(String serviceResponse){
-       List<SearchDTO> jsonResponseList = new SiiKGetJSONParser().getParseResponse(getActivity(),serviceResponse);
+
+     jsonResponseList = new SiiKGetJSONParser().getParseResponse(getActivity(),serviceResponse);
         if(jsonResponseList!=null && jsonResponseList.size()>0){
             //populate list;
+            jsonResponseArrayList = jsonResponseList;
             lauchWebserviceResultsList(jsonResponseList);
+
         }
     }
 

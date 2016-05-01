@@ -41,20 +41,36 @@ public class SiiKPostResponseHelper extends AsyncTask<String, Void, String> {
     private SiikReceiveListener receiveListener = null;
     private JSONObject jsonPayLoad;
     private boolean isFromReportLostFound = false;
+    private boolean isFound  = false;
+    private boolean isPostComment = false;
+    private String progressText;
 
-    public SiiKPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,JSONObject jsonPayLoad){
+    public SiiKPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,JSONObject jsonPayLoad,String progressText){
         this.ctx = ctx;
         this.receiveListener = receiveListener;
         this.jsonPayLoad = jsonPayLoad;
+        this.progressText = progressText;
         showProgressDialog();
 
     }
 
-    public SiiKPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,JSONObject jsonPayLoad,boolean isFromReportLostFound){
+    public SiiKPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,JSONObject jsonPayLoad,boolean isPostComment,String progressText){
+        this.ctx = ctx;
+        this.receiveListener = receiveListener;
+        this.jsonPayLoad = jsonPayLoad;
+        this.isPostComment = isPostComment;
+        this.progressText = progressText;
+        showProgressDialog();
+
+    }
+
+    public SiiKPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,JSONObject jsonPayLoad,boolean isFromReportLostFound,boolean isFound,String progressText){
         this.ctx = ctx;
         this.receiveListener = receiveListener;
         this.jsonPayLoad = jsonPayLoad;
         this.isFromReportLostFound = isFromReportLostFound;
+        this.isFound = isFound;
+        this.progressText = progressText;
         showProgressDialog();
 
     }
@@ -91,7 +107,7 @@ public class SiiKPostResponseHelper extends AsyncTask<String, Void, String> {
 
     private void showProgressDialog(){
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Registering...");
+        progressDialog.setMessage(progressText);
         if(!progressDialog.isShowing())
             progressDialog.show();
     }
@@ -119,6 +135,24 @@ public class SiiKPostResponseHelper extends AsyncTask<String, Void, String> {
           conn.setFixedLengthStreamingMode(jsonMessage.getBytes().length);
 
             if(isFromReportLostFound){
+                SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils();
+                String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
+                if(!TextUtils.isEmpty(headerToken)){
+                    String basicAuth = "Bearer " +headerToken;
+                    conn.setRequestProperty("Authorization", basicAuth);
+                }
+            }
+
+            if(isFound){
+                SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils();
+                String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
+                if(!TextUtils.isEmpty(headerToken)){
+                    String basicAuth = "Bearer " +headerToken;
+                    conn.setRequestProperty("Authorization", basicAuth);
+                }
+            }
+
+            if(isPostComment){
                 SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils();
                 String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
                 if(!TextUtils.isEmpty(headerToken)){

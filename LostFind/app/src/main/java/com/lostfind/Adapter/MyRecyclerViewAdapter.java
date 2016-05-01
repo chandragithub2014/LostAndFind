@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.image.SmartImage;
 import com.loopj.android.image.SmartImageView;
@@ -33,16 +35,18 @@ public class MyRecyclerViewAdapter extends RecyclerView
     private List<SearchDTO> mDataset;
     private static MyClickListener myClickListener;
     Context ctx;
+    View view = null;
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
             .OnClickListener {
         TextView description,lostStatus;
         SmartImageView searchIcon;
+        RelativeLayout resultsRow;
 
         public DataObjectHolder(View itemView) {
             super(itemView);
-
+            resultsRow = (RelativeLayout)itemView.findViewById(R.id.results_row);
             description = (TextView) itemView.findViewById(R.id.desc);
             searchIcon = (SmartImageView)itemView.findViewById(R.id.lost_item);
             lostStatus  = (TextView) itemView.findViewById(R.id.status);
@@ -61,7 +65,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
 
         @Override
         public void onClick(View v) {
-            myClickListener.onItemClick(getAdapterPosition(),v);
+      //      myClickListener.onItemClick(getAdapterPosition(),v,(String)view.getTag());
 
 
         }
@@ -84,7 +88,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent,
                                                int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.search_results_row_layout, parent, false);
 
         DataObjectHolder dataObjectHolder = new DataObjectHolder(view);
@@ -92,7 +96,7 @@ public class MyRecyclerViewAdapter extends RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(DataObjectHolder holder, int position) {
+    public void onBindViewHolder(DataObjectHolder holder, final int position) {
         holder.description.setText(mDataset.get(position).getItemDescription());
         holder.lostStatus.setText(mDataset.get(position).getStatus());
         Log.d("Adapter","ImageURL:::"+mDataset.get(position).getImageURL());
@@ -114,7 +118,24 @@ public class MyRecyclerViewAdapter extends RecyclerView
             }
      //   }
 
-       holder.searchIcon.setTag(mDataset.get(position).getItemId());
+       //holder.searchIcon.setTag(mDataset.get(position).getItemId());
+       // Log.d("MyRecyclerVieaAdapter","TAG of ::::"+mDataset.get(position).getItemId());
+        holder.resultsRow.setTag(mDataset.get(position).getItemId());
+        holder.description.setTag(mDataset.get(position).getItemId());
+
+        holder.resultsRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("MyRecyclerAdapter", "Tag On Clicked:::" + (String) v.getTag());
+              if(!mDataset.get(position).getStatus().equalsIgnoreCase("claimed")) {
+                  myClickListener.onItemClick(position, v, (String) v.getTag());
+              }else{
+                  Toast.makeText(ctx,"Item Already Claimed",Toast.LENGTH_LONG).show();
+              }
+            }
+        });
+
+
 
 
     }

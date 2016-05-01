@@ -9,7 +9,7 @@
         <item>Home</item>
         <item>User Settings</item>
         <item>Report Loss</item>
-        <item>Report Find</item>
+        <item>Report Found</item>
         <item>Search</item>
         <item>Report History</item>
         <item>Discussion</item>
@@ -17,6 +17,11 @@
         <item>Logout</item>
     </string-array>
 
+    <string-array name="spinner_report_status">
+    <item>Lost</item>
+    <item>Found</item>
+    <item>Claim</item>
+    </string-array>
 
     <array name="nav_drawer_image_items">
         <item>@drawable/menu_home</item>

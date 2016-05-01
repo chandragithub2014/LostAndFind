@@ -40,4 +40,42 @@ public class SiiKGetJSONParser {
       }
       return  parsedList;
     }
+
+    public SearchDTO getParseResponseForItem(Context ctx,String response){
+        SearchDTO temp = new SearchDTO();
+        try{
+            JSONObject responseJSON = new JSONObject(response);
+            temp.setItemId(""+responseJSON.get("id"));
+            temp.setCategory((String) responseJSON.get("category"));
+            temp.setImageURL("" + responseJSON.get("imageurl"));
+            temp.setItemDescription((String) responseJSON.get("description"));
+            temp.setStatus((String) responseJSON.get("status"));
+            temp.setInfo((String) responseJSON.get("info"));
+            temp.setLocation((String) responseJSON.get("location"));
+            temp.setEmail((String) responseJSON.get("email"));
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  temp;
+    }
+
+
+    /*
+    {
+  "id": 18,
+  "email": "arunnda544@gmail.com",
+  "description": "testmahesh",
+  "category": "Books",
+  "from_date": "2016-04-15T00:00:00.000Z",
+  "to_date": "2016-03-15T00:00:00.000Z",
+  "location": "KetchumIDUnitedStates",
+  "imageurl": "http://52.38.114.74:8000/uploads/images/item-1460667167619.png",
+  "info": "6dychvkb",
+  "status": "lost",
+  "created_at": "2016-04-14T20:53:34.000Z"
+}
+     */
 }

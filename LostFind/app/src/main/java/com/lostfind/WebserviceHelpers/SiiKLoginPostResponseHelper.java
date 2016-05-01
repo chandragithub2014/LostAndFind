@@ -11,6 +11,7 @@ import com.lostfind.application.MyApplication;
 import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.utils.NetworkCheck;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -38,13 +39,16 @@ public class SiiKLoginPostResponseHelper extends AsyncTask<String, Void, String>
     private ProgressDialog progressDialog = null;
     private SiikReceiveListener receiveListener = null;
     private String userName,password;
+    private String loginType;
 
 
-    public SiiKLoginPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,String userName,String password){
+    public SiiKLoginPostResponseHelper(Context ctx, SiikReceiveListener receiveListener,String userName,String password,String loginType){
         this.ctx = ctx;
         this.receiveListener = receiveListener;
         this.userName = userName;//MyApplication.getInstance().getUserIDForEmail();
         this.password = password;
+        this.loginType = loginType;
+        Log.d(TAG,"Email:::"+userName+"Password::::"+password);
         showProgressDialog();
 
     }
@@ -75,7 +79,6 @@ public class SiiKLoginPostResponseHelper extends AsyncTask<String, Void, String>
 
     }
 
-    @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         if (receiveListener != null) {
@@ -88,6 +91,13 @@ public class SiiKLoginPostResponseHelper extends AsyncTask<String, Void, String>
 
 
     private String fetchPostResponse(String  credBase64,String serviceURL){
+
+        JSONObject jsonPayload  = new JSONObject();
+        try {
+            jsonPayload.put("type", loginType);
+        }catch (JSONException e){
+               e.printStackTrace();
+        }
         String postResponse="";
         InputStream inputStream = null;
         OutputStream os = null;
@@ -96,16 +106,18 @@ public class SiiKLoginPostResponseHelper extends AsyncTask<String, Void, String>
             URL url = new URL(serviceURL);
             conn =  (HttpURLConnection) url.openConnection();
 
-
+            String jsonMessage = jsonPayload.toString();
+            Log.d(TAG,"Json MEssage:::"+jsonMessage);
             conn.setReadTimeout(10000 /*milliseconds*/);
             conn.setConnectTimeout(50000 /* milliseconds */);
             conn.setRequestMethod("POST");
             //  conn.setUseCaches (false);
             conn.setDoInput(true);
             //  conn.setDoOutput(true);
-
+            conn.setFixedLengthStreamingMode(jsonMessage.getBytes().length);
             String basicAuth = "Basic " +credBase64;
-            conn.setRequestProperty ("Authorization", basicAuth);
+            Log.d(TAG,"BasicAuth"+basicAuth);
+            conn.setRequestProperty("Authorization", basicAuth);
 
 
             //make some HTTP header nicety
@@ -117,6 +129,14 @@ public class SiiKLoginPostResponseHelper extends AsyncTask<String, Void, String>
 
             //open
             conn.connect();
+
+            //setup send
+            os = new BufferedOutputStream(conn.getOutputStream());
+            os.write(jsonMessage.getBytes());
+            //   int statusCode = conn.getResponseCode();
+            //   Log.d(TAG,"Status Code:::"+statusCode);
+            //clean up
+            os.flush();
            /* //setup send
             os = new BufferedOutputStream(conn.getOutputStream());
             os.write(jsonMessage.getBytes());

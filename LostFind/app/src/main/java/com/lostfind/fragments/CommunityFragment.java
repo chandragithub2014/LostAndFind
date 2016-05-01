@@ -226,7 +226,7 @@ public class CommunityFragment extends Fragment implements MyClickListener,View.
     }
 
     @Override
-    public void onItemClick(int position, View v) {
+    public void onItemClick(int position, View v,String tag) {
         Log.d(TAG,"Clicked Position:::"+position);
     }
 

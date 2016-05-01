@@ -38,6 +38,7 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
     private SiikReceiveListener receiveListener = null;
     private JSONObject jsonPayLoad;
     private boolean isFromReportLostFound = false;
+    private boolean isForClaimReportHistory = false;
 
     public SiiKPUTResponseHelper(Context ctx, SiikReceiveListener receiveListener, JSONObject jsonPayLoad){
         this.ctx = ctx;
@@ -47,6 +48,13 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
 
     }
 
+    public SiiKPUTResponseHelper(Context ctx, SiikReceiveListener receiveListener,boolean isForClaimReportHistory){
+        this.ctx = ctx;
+        this.receiveListener = receiveListener;
+        this.isForClaimReportHistory = isForClaimReportHistory;
+        showProgressDialog();
+
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -57,7 +65,12 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
         if(!isNetworkAvailable){
             serverResponse = "Network Fail";
         }else{
-            serverResponse = fetchPostResponse(jsonPayLoad,serviceUrl);
+            if(isForClaimReportHistory){
+                serverResponse = fetchPUTResponse(serviceUrl);
+                Log.d(TAG,"ServerResponse For PUT::"+serverResponse);
+            }else {
+                serverResponse = fetchPostResponse(jsonPayLoad, serviceUrl);
+            }
         }
         return serverResponse;
     }
@@ -81,13 +94,164 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
 
     private void showProgressDialog(){
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Registering...");
+        progressDialog.setMessage("Posting Updates...");
         if(!progressDialog.isShowing())
             progressDialog.show();
     }
 
 
+//
 
+    private String fetchPUTResponse(String serviceURL){
+        String postResponse="";
+        InputStream inputStream = null;
+        OutputStream os = null;
+        HttpURLConnection conn=null;
+        try {
+            URL url = new URL(serviceURL);
+            conn =  (HttpURLConnection) url.openConnection();
+         //   String jsonMessage = "";
+
+         //   jsonMessage = jsonPayLoad.toString();
+
+         //   Log.d(TAG,"Json MEssage:::"+jsonMessage);
+            conn.setReadTimeout(10000 /*milliseconds*/);
+            conn.setConnectTimeout(50000 /* milliseconds */);
+            conn.setRequestMethod("PUT");
+            //  conn.setUseCaches (false);
+            conn.setDoInput(true);
+            //  conn.setDoOutput(true);
+//
+        //    conn.setFixedLengthStreamingMode(jsonMessage.getBytes().length);
+
+
+            // if(isFromReportLostFound){
+            SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils();
+            String headerToken =            sharedPreferencesUtils.getStringPreferences(ctx,"token");
+            if(!TextUtils.isEmpty(headerToken)){
+                String basicAuth = "Bearer " +headerToken;
+                Log.d(TAG,"BasicAuth Token:::"+basicAuth);
+                conn.setRequestProperty("Authorization", basicAuth);
+            }
+            //  }
+            //make some HTTP header nicety
+            conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            conn.setRequestProperty("X-Requested-With", "XMLHttpRequest");
+            //   conn.setRequestProperty("Content-Encoding", "gzip");
+
+
+
+            //open
+            conn.connect();
+            //setup send
+          //  os = new BufferedOutputStream(conn.getOutputStream());
+         //   os.write(jsonMessage.getBytes());
+            //   int statusCode = conn.getResponseCode();
+            //   Log.d(TAG,"Status Code:::"+statusCode);
+            //clean up
+        //    os.flush();
+
+            int statusCode = conn.getResponseCode();
+            Log.d(TAG,"status code:::"+statusCode);
+            if(statusCode ==  201 || statusCode == 200){
+                inputStream  = new BufferedInputStream(conn.getInputStream());
+                String serviceResponse = convertStreamToString(inputStream);
+                Log.d(TAG,"Service Response"+serviceResponse);
+                if(!TextUtils.isEmpty(serviceResponse)) {
+                    try{
+                        JSONObject responseJSON = new JSONObject(serviceResponse);
+                        String responseMessage = responseJSON.getString("message");
+                        MyApplication.getInstance().setRegistrationResponseMessage(responseMessage);
+                        postResponse = "putSuccess";
+                        return postResponse;
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            }else{
+                inputStream  = new BufferedInputStream(conn.getErrorStream());
+                String serviceResponse = convertStreamToString(inputStream);
+                Log.d(TAG,"Service Response"+serviceResponse);
+                if(!TextUtils.isEmpty(serviceResponse)) {
+                    try{
+                        JSONObject responseJSON = new JSONObject(serviceResponse);
+                        String responseMessage = responseJSON.getString("message");
+                        MyApplication.getInstance().setRegistrationResponseMessage(responseMessage);
+                        postResponse = "Post Failed";
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+
+
+
+
+
+        } catch (SocketTimeoutException se) {
+            progressDialog.dismiss();
+            Log.e(TAG,
+                    "SocketTimeoutException occurred while Posting the Actions"
+                            + se.getMessage());
+            if (receiveListener != null) {
+                receiveListener.receiveResult("Post Failed");
+            }
+            se.printStackTrace();
+        }
+        catch(ProtocolException pe){
+            progressDialog.dismiss();
+            postResponse = "Post Failed";
+            Log.e(TAG, "ProtocolException");
+        }
+        catch(MalformedURLException mle){
+            progressDialog.dismiss();
+            postResponse = "Post Failed";
+            Log.e(TAG, "MalformedURLException");
+        }
+
+        catch (IOException e) {
+            progressDialog.dismiss();
+            Log.e(TAG,
+                    "IOException occurred while Posting the Actions"
+                            + e.getMessage());
+            e.printStackTrace();
+
+
+            return postResponse;
+        }
+
+        finally {
+            //clean up
+            try {
+                os.close();
+            }
+            catch(NullPointerException ex){
+                postResponse = "Post Failed";
+                Log.e(TAG, "NullPointerException");
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            try {
+                inputStream.close();
+            } catch(NullPointerException ex){
+                postResponse = "Post Failed";
+                Log.e(TAG, "NullPointerException");
+            }catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            conn.disconnect();
+        }
+        return postResponse;
+    }
+
+
+    //
 
 
     private String fetchPostResponse(JSONObject jsonPayLoad,String serviceURL){
@@ -98,7 +262,10 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
         try {
             URL url = new URL(serviceURL);
             conn =  (HttpURLConnection) url.openConnection();
-            String jsonMessage = jsonPayLoad.toString();
+            String jsonMessage = "";
+
+                 jsonMessage = jsonPayLoad.toString();
+
             Log.d(TAG,"Json MEssage:::"+jsonMessage);
             conn.setReadTimeout(10000 /*milliseconds*/);
             conn.setConnectTimeout(50000 /* milliseconds */);
@@ -106,7 +273,9 @@ public class SiiKPUTResponseHelper extends AsyncTask<String, Void, String> {
           //  conn.setUseCaches (false);
             conn.setDoInput(true);
           //  conn.setDoOutput(true);
-          conn.setFixedLengthStreamingMode(jsonMessage.getBytes().length);
+
+                conn.setFixedLengthStreamingMode(jsonMessage.getBytes().length);
+
 
            // if(isFromReportLostFound){
                 SharedPreferencesUtils sharedPreferencesUtils = new SharedPreferencesUtils();

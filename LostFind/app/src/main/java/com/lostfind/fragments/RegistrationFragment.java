@@ -226,7 +226,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
             e.printStackTrace();
         }
         prefs.saveStringPreferences(getActivity(), "email", emailPwdJson.toString());
-        Toast.makeText(getActivity(), "Data Saved", Toast.LENGTH_LONG).show();
+   //     Toast.makeText(getActivity(), "Data Saved", Toast.LENGTH_LONG).show();
         prefs.saveStringPreferences(getActivity(), "loginType", "emailProfile");
        /* if(!TextUtils.isEmpty(prefs.getStringPreferences(getActivity(),"emailProfile"))){
 
@@ -274,7 +274,7 @@ public class RegistrationFragment extends Fragment implements View.OnClickListen
         catch (JSONException e){
             e.printStackTrace();
         }
-        new SiiKPostResponseHelper(getActivity(),RegistrationFragment.this,emailPwdJson).execute(BikeConstants.REGISTRATION_POST_SERVICE_URL);
+        new SiiKPostResponseHelper(getActivity(),RegistrationFragment.this,emailPwdJson,"Registering...").execute(BikeConstants.REGISTRATION_POST_SERVICE_URL);
     }
     private void callSlidingMenu(){
         Intent i = new Intent(getActivity(), SlidingMenuActivity.class);

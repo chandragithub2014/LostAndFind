@@ -28,12 +28,14 @@
             android:gravity="center"
             android:textSize="36sp"
             android:textColor="#ffffff"
+
             android:text="Register" />
 
 
 
         <EditText
             android:id="@+id/reg_name"
+            android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -52,6 +54,7 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:id="@+id/register_email"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -69,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/register_loc"
+            android:singleLine="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
@@ -86,6 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:singleLine="true"
             android:inputType="phone"
             android:background="@drawable/edittextnewstyle"
             android:fontFamily="sans-serif"
@@ -104,6 +109,7 @@
             android:background="@drawable/edittextnewstyle"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
+            android:singleLine="true"
             android:textSize="20sp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
@@ -121,6 +127,7 @@
             android:inputType="textPassword"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
+            android:singleLine="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/edittextnewstyle"
             android:fontFamily="sans-serif"

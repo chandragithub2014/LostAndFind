@@ -36,5 +36,7 @@ public class BikeConstants {
 	public static final String REPORT_POST_SERVICE_URL = IP_ADDRESS+"/items";
 	public static final String USER_PROFILE_GET_SERVICE_URL = IP_ADDRESS+"/users/@me";
 	public static final String REPORT_HISTORY_GET_SERVICE_URL = IP_ADDRESS+"/history";
+	public static final String COMMENT_ITEM_URL = IP_ADDRESS+"/items";
+	public static final String RESET_PASSWORD = IP_ADDRESS+"/reset";
 
 }

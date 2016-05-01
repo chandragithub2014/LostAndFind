@@ -18,9 +18,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_marginTop="5dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+     android:gravity="center"
     android:id="@+id/social_login_child"
+
 
  >
 
@@ -30,7 +30,8 @@
         android:text="Register With"
         android:layout_gravity="center_vertical"
         android:textColor="#ffffff"
-        android:layout_marginLeft="20dp"
+
+        android:layout_marginLeft="10dp"
         android:paddingRight="5dp"
         android:fontFamily="sans-serif-thin"
         android:textStyle="normal"
@@ -38,17 +39,20 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-       android:layout_marginLeft="5dp"
+
         android:layout_marginRight="5dp"
         android:id="@+id/fbook"
         android:layout_gravity="center_vertical"
         android:background="@drawable/ic_fb"
+        android:scaleType="centerInside"
       />
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:id="@+id/gplus"
+        android:layout_marginLeft="2dp"
+        android:scaleType="centerInside"
         android:background="@drawable/ic_gplus"
 
         />

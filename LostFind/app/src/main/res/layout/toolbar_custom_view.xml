@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:text="SiiK"
         android:id="@+id/title"
-        android:gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_centerVertical="true"
         android:textSize="30dp"
         android:textColor="#481fbe"
         android:layout_marginRight="55dp"
@@ -37,8 +38,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/map_icon"
         android:layout_margin="1dp"
-        android:src="@drawable/alert_icon"
-
+        android:src="@drawable/ic_add_alert_black_18dp"
+        android:scaleType="fitCenter"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>

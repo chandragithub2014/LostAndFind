@@ -166,7 +166,24 @@ public class SiiKImageUploadHelper  extends AsyncTask<String, Void, String> {
              MyApplication.getInstance().setImageURL("");
              serverresponse = "uploadfail";
          }
-     } catch (Exception e) {
+     }
+     catch (SocketTimeoutException se) {
+         Log.e(TAG,
+                 "SocketTimeoutException occurred while Posting Image to Server"
+                         + se.getMessage());
+         se.printStackTrace();
+
+         return "uploadfail";
+
+     }catch (IOException e) {
+         Log.e(TAG,
+                 "IOException occurred while Posting Image to Server"
+                         + e.getMessage());
+         e.printStackTrace();
+         return "uploadfail";
+
+     }
+     catch (Exception e) {
          e.printStackTrace();
      }
 

@@ -39,11 +39,25 @@ public class SiiKGetResponseHelper extends AsyncTask<String, Void, String> {
     private SiikReceiveListener receiveListener = null;
    private JSONObject jsonPayLoadList;
 SharedPreferencesUtils sharedPreferencesUtils;
-    public SiiKGetResponseHelper(Context ctx, SiikReceiveListener receiveListener/*,JSONObject jsonPayLoadList*/){
+    boolean isPasswordReset = false;
+    private String progressText;
+    public SiiKGetResponseHelper(Context ctx, SiikReceiveListener receiveListener,String progressText/*,JSONObject jsonPayLoadList*/){
         this.ctx = ctx;
         this.receiveListener = receiveListener;
       //  this.jsonPayLoadList = jsonPayLoadList;
         sharedPreferencesUtils = new SharedPreferencesUtils();
+        this.progressText = progressText;
+        showProgressDialog();
+
+    }
+
+    public SiiKGetResponseHelper(Context ctx, SiikReceiveListener receiveListener,boolean isPasswordReset,String progressText){
+        this.ctx = ctx;
+        this.receiveListener = receiveListener;
+        this.isPasswordReset = isPasswordReset;
+        //  this.jsonPayLoadList = jsonPayLoadList;
+        sharedPreferencesUtils = new SharedPreferencesUtils();
+        this.progressText = progressText;
         showProgressDialog();
 
     }
@@ -77,7 +91,7 @@ SharedPreferencesUtils sharedPreferencesUtils;
 
     private void showProgressDialog(){
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Receiving");
+        progressDialog.setMessage(progressText);
         if(!progressDialog.isShowing())
             progressDialog.show();
     }
@@ -118,8 +132,16 @@ SharedPreferencesUtils sharedPreferencesUtils;
                 if (statusCode ==  BikeConstants.STATUSCODE_OK) {
                     inputStream = new BufferedInputStream(urlConnection.getInputStream());
                     response = convertStreamToString(inputStream);
-                    Log.d(TAG, "GET Response for HTTPURLConnection:::"+response);
-                    MyApplication.getInstance().setSearchResponse(response);
+                    Log.d(TAG, "GET Response for HTTPURLConnection:::" + response);
+                    if(isPasswordReset){
+                        JSONObject responseJSON = new JSONObject(response);
+                        String responseMessage = responseJSON.getString("message");
+                        MyApplication.getInstance().setRegistrationResponseMessage(responseMessage);
+                    }
+                  else{
+                        MyApplication.getInstance().setSearchResponse(response);
+                    }
+
                     response = "success";
                     return  response;
 

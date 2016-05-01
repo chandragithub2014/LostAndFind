@@ -89,6 +89,7 @@ public class ReportLossFragment extends Fragment implements View.OnClickListener
     // TODO: Rename and change types of parameters
     private boolean mParam1;
     private String mParam2;
+    private boolean isFound = false;
 
     Button spinnerType;
 View view = null;
@@ -212,7 +213,19 @@ private String imageUrl="";
         setGoogleLocation();
 //additionalInfo,rewardOption
     }
+private void clearDataInDataFields(){
+    spinnerType.setText("");
+    description.setText("");
+    location_spinner.setText("");
+    fromDate.setText("From Date");
+    toDate.setText("To Date");
+    additionalInfo.setText("");
+    rewardOption.setText("");
+    ImageView imageView = (ImageView) view
+            .findViewById(R.id.iv_upload);
+    imageView.setImageResource(R.drawable.ic_searchresults);
 
+}
     private void setGoogleLocation(){
         location_spinner.setAdapter(new GooglePlacesAutocompleteAdapter(getActivity(), R.layout.list_item));
     }
@@ -329,9 +342,11 @@ if(isFromDateSet) {
                         android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
             } else {
                 // continue with your code
+                launchCameraGallerySelector();
                 Log.d("TAG","Can write");
             }
         }else{
+            launchCameraGallerySelector();
             Log.d("TAG","Build.VERSION.SDK_INT <= Build.VERSION_CODES.M");
         }
         // int hasWriteExternalStoragePermission  = getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -362,8 +377,17 @@ if(isFromDateSet) {
                 && data.getData() != null) {
 
 
-          String  realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
-            Log.d(TAG,"RealPath::::"+realPath);
+            String realPath = "";
+            Log.d("UserPRofile","Build.VERSION.SDK_INT"+Build.VERSION.SDK_INT);
+            if (Build.VERSION.SDK_INT <=19) {
+                Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                realPath = cursor.getString(idx);
+            }else{
+                realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
+            }
+            Log.d("Report Loss","RealPath::::"+realPath);
             Uri uri = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity()
@@ -569,6 +593,7 @@ if(isFromDateSet) {
             if(mParam1){
                 reportLostFoundJson.put("status", "lost");
             }else{
+                isFound = true;
                 reportLostFoundJson.put("status", "found");
             }
 
@@ -592,7 +617,7 @@ if(isFromDateSet) {
     }
 
     private void makeWebServiceCall(JSONObject jsonPayLoad){
-         new SiiKPostResponseHelper(getActivity(), ReportLossFragment.this,jsonPayLoad ,mParam1).execute(BikeConstants.REPORT_POST_SERVICE_URL);
+         new SiiKPostResponseHelper(getActivity(), ReportLossFragment.this,jsonPayLoad ,mParam1,isFound,"Posting...").execute(BikeConstants.REPORT_POST_SERVICE_URL);
     }
 
 private void popualteDateInDB(){
@@ -764,9 +789,11 @@ private void popualteDateInDB(){
     @Override
     public void receiveResult(String result) {
         Log.d(TAG, "Received Result" + result);
+
         if(result.equalsIgnoreCase("Success")){
+            clearDataInDataFields();
             if(!TextUtils.isEmpty(MyApplication.getInstance().getRegistrationResponseMessage())){
-       //         Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
+               Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
             }
           //  callSlidingMenu();
         }else if(result.equalsIgnoreCase("uploadSuccess")){

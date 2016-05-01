@@ -95,6 +95,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
     private boolean isClaimChecked = false;
     HashMap<String,String> queryHash ;
     String queryString = "";
+    int mContainerId  = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
         super.onCreateView(inflater, container, savedInstanceState);
         searchView = inflater.inflate(R.layout.report_history_layout, container,
                 false);
+        mContainerId = container.getId();
         queryHash = new HashMap<String,String>();
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
@@ -359,8 +361,11 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
     }
 
     @Override
-    public void onItemClick(int position, View v) {
+    public void onItemClick(int position, View v,String tag) {
         Log.d(TAG,"Clicked Position:::"+position);
+        Log.d(TAG, "Clicked Position::: in SearchFragment" + position + "Tag::::"+tag);
+        ClaimRequestFragment claimFrag = ClaimRequestFragment.newInstance(tag,"isFromReportHistory");
+        getActivity().getSupportFragmentManager().beginTransaction().replace(mContainerId,claimFrag).addToBackStack(null).commit();
     }
 
     @Override
@@ -434,7 +439,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
             }
         }
         if(!TextUtils.isEmpty(queryString)){
-            new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
+            new SiiKGetResponseHelper(getActivity(), ReportHistory.this,"Fetching Report History.....").execute(
                     BikeConstants.REPORT_HISTORY_GET_SERVICE_URL+"?"+queryString);
             queryHash = new HashMap<String,String>();
             queryString = "";
@@ -443,7 +448,7 @@ public class ReportHistory extends Fragment implements MyClickListener,OnClickLi
             claim_check.setChecked(false);
 
         }else {
-            new SiiKGetResponseHelper(getActivity(), ReportHistory.this).execute(
+            new SiiKGetResponseHelper(getActivity(), ReportHistory.this,"Fetching Report History.....").execute(
                     BikeConstants.REPORT_HISTORY_GET_SERVICE_URL);
         }
     }

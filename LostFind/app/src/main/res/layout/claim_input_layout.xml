@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    >
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Description: Eg:Computer,mobiles Etc.)"
+    android:background="@drawable/edittextnewstyle"
+    android:id="@+id/find_loss_desc"
+    android:layout_marginTop="5dp"
+    android:paddingLeft="5dp"
+    android:singleLine="true"
+    android:fontFamily="sans-serif"
+    android:textStyle="normal"
+    android:textColor="#9b9b9b"
+    android:textSize="20sp"
+    android:editable="false"
+    android:clickable="false"
+
+
+   />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/find_loss_selector"
+        android:layout_marginTop="5dp"
+        android:editable="false"
+        android:clickable="false"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:paddingLeft="5dp"/>
+
+
+
+
+
+    <AutoCompleteTextView
+        android:id="@+id/find_loss_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Select Location"
+        android:background="@drawable/edittextnewstyle"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="5dp"
+        android:drawableRight="@drawable/ic_map"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp"
+        android:editable="false"
+        android:clickable="false"
+        >
+        <requestFocus />
+    </AutoCompleteTextView>
+
+
+
+
+  <!--  <include
+        layout="@layout/to_from_date_picker_layout"
+        android:id="@+id/to_from_date"
+
+        ></include>
+-->
+    <EditText
+    android:inputType="textMultiLine"
+        android:id="@+id/additional_info"
+    android:lines="2"
+    android:minLines="2"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:hint="Comments"
+    android:gravity="top|left"
+    android:maxLines="2"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+        android:layout_marginTop="10dp"
+    android:scrollbars="vertical"
+    android:background="@drawable/edittextnewstyle"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp"
+
+    />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Reward Option"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/find_loss_reward_option"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:paddingLeft="5dp"
+        android:fontFamily="sans-serif"
+        android:editable="false"
+        android:clickable="false"
+        android:textStyle="normal"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp"
+        android:visibility="gone"/>
+
+    <Spinner
+        android:id="@+id/status_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawSelectorOnTop="true"
+        android:visibility="gone"
+        />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Category"
+        android:gravity="center_vertical"
+        android:fontFamily="sans-serif"
+        android:textStyle="normal"
+        android:textColor="#9b9b9b"
+        android:textSize="20sp"
+        android:background="@drawable/edittextnewstyle"
+        android:id="@+id/status_item"
+        android:layout_marginTop="5dp"
+        android:drawableRight="@drawable/ic_down_arrow"
+        android:drawablePadding="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:paddingLeft="5dp"
+        android:visibility="gone"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:id="@+id/find_loss_report"
+        android:layout_marginTop="10dp"
+        android:text="Claim"
+        android:gravity="center"
+        android:background="@drawable/buttonshape"
+
+        android:singleLine="true"
+        android:layout_gravity="right|bottom" />
+
+</LinearLayout>
+</ScrollView>
+
+<!--
+    android:editable="false"
+    android:clickable="false"-->

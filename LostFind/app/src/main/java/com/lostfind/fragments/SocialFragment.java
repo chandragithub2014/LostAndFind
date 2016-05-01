@@ -99,7 +99,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
 
     private EditText loginEmail,loginPassword;
     private String faceBookEmail = "";
-
+    private String accessToken = "";
 
 
     public SocialFragment() {
@@ -226,7 +226,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
            callSlidingMenu();
 
        }else if(result.equalsIgnoreCase("Post Failed")){
-
+           Toast.makeText(getActivity(),MyApplication.getInstance().getRegistrationResponseMessage(),Toast.LENGTH_LONG).show();
        }
     }
     /* private void initSocialLogin(View v){
@@ -297,7 +297,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
             //   googlePlusLogin();
                 break;
             case R.id.fbook:
-          //       fbLogin();
+                 fbLogin();
 
                 break;
             case R.id.newuser:
@@ -322,7 +322,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
         String email = loginEmail.getText().toString();
         String password = loginPassword.getText().toString();
         String emailJSON = sharedUtils.getStringPreferences(getActivity(),"email");
-        new SiiKLoginPostResponseHelper(getActivity(),SocialFragment.this,email,password).execute(BikeConstants.LOGIN_POST_SERVICE_URL);
+        new SiiKLoginPostResponseHelper(getActivity(),SocialFragment.this,email,password,"email").execute(BikeConstants.LOGIN_POST_SERVICE_URL);
 
     }else{
         Toast.makeText(getActivity(),"Login Fields Can't be Empty",Toast.LENGTH_LONG).show();
@@ -354,7 +354,7 @@ private void googlePlusLogin(){
 }
 
     private void fbLogin(){
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email","picture.type(small)"));
     }
   /*  private void initGPlus(){
 
@@ -372,7 +372,7 @@ private void googlePlusLogin(){
                       Log.d("Success", "Login");
                       Log.d("Social Fragment","Facebook AccessToken::::"+
                               loginResult.getAccessToken().getToken());
-
+                      accessToken = loginResult.getAccessToken().getToken();
                       Profile profile = Profile.getCurrentProfile();
 
                       // Facebook Email address
@@ -396,7 +396,7 @@ private void googlePlusLogin(){
                                           Log.d("TAG", "Name:::" + Name);
                                           //   Toast.makeText(getActivity(), "Name " + Name, Toast.LENGTH_LONG).show();
 
-                                          saveFacebookPreferences(Name,faceBookEmail);
+                                          saveFacebookPreferences(Name,faceBookEmail,accessToken);
                                       } catch (JSONException e) {
                                           e.printStackTrace();
                                       }
@@ -468,7 +468,7 @@ if(accessTokenTracker!=null && profileTracker!=null){
     }
 
 
-    private void saveFacebookPreferences(String profileName,String fBookEmail){
+    private void saveFacebookPreferences(String profileName,String fBookEmail,String accessToken){
         sharedUtils.saveStringPreferences(getActivity(), BikeConstants.BIKE_PREFS_DATA, profileName);
 
 
@@ -482,13 +482,15 @@ if(accessTokenTracker!=null && profileTracker!=null){
         catch (JSONException e){
             e.printStackTrace();
         }
-        Log.d("TAG","Facebook JSON::::"+fbookJson.toString());
+        Log.d("TAG", "Facebook JSON::::" + fbookJson.toString());
         sharedUtils.saveStringPreferences(getActivity(), "facebook", fbookJson.toString());
 
         sharedUtils.saveStringPreferences(getActivity(), "loginType", "facebookprofile");
+        if(!TextUtils.isEmpty(accessToken)) {
+            new SiiKLoginPostResponseHelper(getActivity(), SocialFragment.this, fBookEmail, accessToken/*"999617840120324|ZONjneHPt9QWksmCLELvqvMCQm8"*/, "facebook").execute(BikeConstants.LOGIN_POST_SERVICE_URL);
+        }
 
-
-        callSlidingMenu();
+    //    callSlidingMenu();
     }
     private void displayMessage(Profile profile){
         if(profile != null){

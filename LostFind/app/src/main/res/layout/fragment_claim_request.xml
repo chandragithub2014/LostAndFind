@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_plane_bg"
+    android:id="@+id/root_layout"
+    >
+
+    <LinearLayout
+        android:layout_above="@+id/footer_img_btn"
+        android:layout_alignParentTop="true"
+        android:id="@+id/report_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:layout_margin= "10dp"
+        android:background="@drawable/transparentshape">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:background="@drawable/frameshape"
+            android:layout_height="0dp"
+            android:layout_marginTop= "10dp"
+            android:layout_marginLeft= "10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="30">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/iv_upload"
+
+                android:src="@drawable/ic_searchresults"
+                android:scaleType="fitXY"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:textColor="#ffffff"
+                android:text="add"
+                android:visibility="gone"
+                android:background="@drawable/buttonshape"
+                android:id="@+id/chng_btn"
+                android:drawableRight="@drawable/ic_change"
+                android:drawablePadding="2dp"
+                android:paddingRight="2dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_gravity="right|bottom" />
+
+        </FrameLayout>
+        <include
+            android:id="@+id/find_loss_input"
+            layout="@layout/claim_input_layout"
+            android:layout_weight="65"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            ></include>
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/footer_img_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+
+        android:background="@drawable/ic_footerlogo"
+        />
+</RelativeLayout>

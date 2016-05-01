@@ -75,6 +75,11 @@ public class SlidingMenuActivity extends AppCompatActivity implements FragmentDr
                 .commit();*/
     }
 
+   /* @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+*/
     /**
      * Hides virtual keyboard
      *

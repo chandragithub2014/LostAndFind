@@ -14,9 +14,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -110,7 +114,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
              profilePassword = profileJSONObject.getString("password");
             String profileName = profileJSONObject.getString("name");
             String phoneNum =  profileJSONObject.getString("phone");
-            if(profileJSONObject.getString("imageurl")!=null){
+            if(profileJSONObject.getString("imageurl")!=null && !profileJSONObject.getString("imageurl").equalsIgnoreCase("null")){
              profileImage = profileJSONObject.getString("imageurl");
                 new LoadImage().execute(profileImage);
             }
@@ -126,7 +130,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         }
     }
     private void makeWebserviceCall(){
-        new SiiKGetResponseHelper(getActivity(), UserProfileFragment.this).execute(
+        new SiiKGetResponseHelper(getActivity(), UserProfileFragment.this,"Fetching UserProfile ....").execute(
                 BikeConstants.USER_PROFILE_GET_SERVICE_URL);
     }
     @Override
@@ -145,6 +149,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         Toolbar mToolBar = (Toolbar)getActivity().findViewById(R.id.toolbar);
         TextView toolBarTitle = (TextView)mToolBar.findViewById(R.id.title);
         toolBarTitle.setText("SiiK");
+        reg_loc = (AutoCompleteTextView)userProfileView.findViewById(R.id.register_loc);
         firstName = (EditText) userProfileView
                 .findViewById(R.id.firstName);
         lastName = (EditText) userProfileView
@@ -256,7 +261,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         //	phoneNumber.setText("+11003333");
         //	userId.setText("");
 
-        reg_loc = (AutoCompleteTextView)userProfileView.findViewById(R.id.register_loc);
+
         setGoogleLocation();
         makeWebserviceCall();
         return userProfileView;
@@ -379,6 +384,13 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         phoneNumber.setClickable(false);
         userId.setClickable(false);
 
+        firstName.setTextColor(Color.parseColor("#9b9b9b"));
+        lastName.setTextColor(Color.parseColor("#9b9b9b"));
+        emailId.setTextColor(Color.parseColor("#9b9b9b"));
+        phoneNumber.setTextColor(Color.parseColor("#9b9b9b"));
+        userId.setTextColor(Color.parseColor("#9b9b9b"));
+        reg_loc.setTextColor(Color.parseColor("#9b9b9b"));
+
     }
 
     private void enableView(){
@@ -396,6 +408,13 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         phoneNumber.setClickable(true);
         userId.setClickable(true);
 
+        firstName.setTextColor(Color.parseColor("#000000"));
+        lastName.setTextColor(Color.parseColor("#000000"));
+     //   emailId.setTextColor(Color.parseColor("#9b9b9b"));
+        phoneNumber.setTextColor(Color.parseColor("#000000"));
+        userId.setTextColor(Color.parseColor("#000000"));
+        reg_loc.setTextColor(Color.parseColor("#000000"));
+
     }
 
 
@@ -406,7 +425,16 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
         if (requestCode == PICK_IMAGE_REQUEST
                 && resultCode == Activity.RESULT_OK && data != null
                 && data.getData() != null) {
-            String  realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
+        String realPath = "";
+            Log.d("UserPRofile","Build.VERSION.SDK_INT"+Build.VERSION.SDK_INT);
+            if (Build.VERSION.SDK_INT <=19) {
+                Cursor cursor = getActivity().getContentResolver().query(data.getData(), null, null, null, null);
+                cursor.moveToFirst();
+                int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                 realPath = cursor.getString(idx);
+            }else{
+                  realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(), data.getData());
+            }
             Log.d("UserProfileFrag","RealPath::::"+realPath);
             Uri uri = data.getData();
             try {
@@ -440,7 +468,7 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
     private void laucnchSlidingMenu(){
         Intent i = new Intent(getActivity(), SlidingMenuActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("position",4);
+        bundle.putInt("position", 4);
         i.putExtras(bundle);
         startActivity(i);
         getActivity().finish();
@@ -456,8 +484,44 @@ public class UserProfileFragment extends Fragment implements  OnClickListener,Si
                 performButtonAction();
                 break;
             case R.id.change_image:
-                launchSelector();
+                checkForPermissions();
+
                 break;
+        }
+    }
+
+    private void checkForPermissions(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.System.canWrite(getActivity())) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            } else {
+                // continue with your code
+                launchSelector();
+                Log.d("TAG","Can write");
+            }
+        }else{
+            Log.d("TAG","Build.VERSION.SDK_INT <= Build.VERSION_CODES.M");
+            launchSelector();
+        }
+        // int hasWriteExternalStoragePermission  = getActivity().checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        //if(getActivity().checkSelfPermission(Manifest.Per))
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Permission", "Granted");
+                    launchSelector();
+                    //    writeToXMLFile(resultXML);
+                } else {
+                    Log.e("Permission", "Denied");
+                }
+                return;
+            }
         }
     }
 
