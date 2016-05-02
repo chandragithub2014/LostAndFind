@@ -8,6 +8,7 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +31,17 @@ import com.google.android.gms.plus.model.people.Person;
 import com.lostfind.R;
 import com.google.android.gms.common.api.Status;
 import com.lostfind.SharedPreferencesUtils;
+import com.lostfind.WebserviceHelpers.SiiKLoginPostResponseHelper;
 import com.lostfind.application.MyApplication;
+import com.lostfind.interfaces.SiikReceiveListener;
 import com.lostfind.slidingmenu.SlidingMenuActivity;
+import com.lostfind.utils.BikeConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ implements
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,SiikReceiveListener {
 
     private static final String TAG = "SignInActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -47,6 +51,14 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
     private ProgressDialog mProgressDialog;
 
     int mContainerId = -1;
+
+    @Override
+    public void receiveResult(String result) {
+        if(result.equalsIgnoreCase("Success")){
+            callSlidingMenu();
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +153,8 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
     // [END onActivityResult]
 
     // [START handleSignInResult]
+    private String googleToken = "";
+    private String googleEmail="";
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
@@ -150,7 +164,8 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
             Log.d(TAG, "Email:::" + acct.getEmail());
             Log.d(TAG,"Token::::"+acct.getIdToken());
             Log.d(TAG,"Server Ath code::::"+acct.getServerAuthCode());
-
+            googleToken = acct.getIdToken();
+            googleEmail = acct.getEmail();
 
             JSONObject gmailJson = new JSONObject();
             try {
@@ -170,7 +185,10 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
             updateUI(true);
           MyApplication.getInstance().setmGoogleAPIClient(mGoogleApiClient);
         //    getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("", "")).commit();
-             callSlidingMenu();
+            if(!TextUtils.isEmpty(googleToken)) {
+                new SiiKLoginPostResponseHelper(getActivity(), GoogleSignInFragment.this, googleEmail,googleToken /*"999617840120324|ZONjneHPt9QWksmCLELvqvMCQm8"*/, "gmail").execute(BikeConstants.LOGIN_POST_SERVICE_URL);
+            }
+        //     callSlidingMenu();
 
 
         } else {
