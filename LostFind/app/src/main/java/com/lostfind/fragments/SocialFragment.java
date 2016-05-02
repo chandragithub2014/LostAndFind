@@ -294,7 +294,7 @@ public class SocialFragment extends Fragment implements View.OnClickListener,Soc
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.gplus:
-            //   googlePlusLogin();
+             googlePlusLogin();
                 break;
             case R.id.fbook:
                  fbLogin();
@@ -354,7 +354,7 @@ private void googlePlusLogin(){
 }
 
     private void fbLogin(){
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email","picture.type(small)"));
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends", "email"));
     }
   /*  private void initGPlus(){
 
