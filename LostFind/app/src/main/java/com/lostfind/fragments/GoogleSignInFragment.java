@@ -186,7 +186,7 @@ public class GoogleSignInFragment extends Fragment /*AppCompatActivity*/ impleme
           MyApplication.getInstance().setmGoogleAPIClient(mGoogleApiClient);
         //    getFragmentManager().beginTransaction().replace(mContainerId, ResultFragment.newInstance("", "")).commit();
             if(!TextUtils.isEmpty(googleToken)) {
-                new SiiKLoginPostResponseHelper(getActivity(), GoogleSignInFragment.this, googleEmail,googleToken /*"999617840120324|ZONjneHPt9QWksmCLELvqvMCQm8"*/, "gmail").execute(BikeConstants.LOGIN_POST_SERVICE_URL);
+                new SiiKLoginPostResponseHelper(getActivity(), GoogleSignInFragment.this, googleEmail,googleToken /*"999617840120324|ZONjneHPt9QWksmCLELvqvMCQm8"*/, "google").execute(BikeConstants.LOGIN_POST_SERVICE_URL);
             }
         //     callSlidingMenu();
 
